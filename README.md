@@ -20,5 +20,5 @@ To tackle this problem, we’ve built [LangGraph](https://langchain-ai.github.io
 git clone https://github.com/langchain-ai/langgraph-101.git
 ```
 
-Navigate to the 0_setup.ipynb notebook in the /notebooks/ folder and follow instructions there! If you run into issues with setting up the python environment or acquiring the necessary API keys due to any restrictions (ex. corporate policy), contact your LangChain representative and we'll find a work-around!
+Navigate to setup.md in the /notebooks/ folder and follow instructions there! If you run into issues with setting up the python environment or acquiring the necessary API keys due to any restrictions (ex. corporate policy), contact your LangChain representative and we'll find a work-around!
 
