@@ -12,6 +12,16 @@ Question: {question}
 Context: {context} 
 Answer:"""
 
+RAG_PROMPT_WITH_MESSAGES = """You are an assistant for question-answering tasks. 
+Use the following pieces of retrieved context to answer the latest question in the conversation. 
+If you don't know the answer, just say that you don't know. 
+The pre-existing conversation may provide important context to the question.
+Use three sentences maximum and keep the answer concise.
+
+Conversation: {conversation}
+Context: {context} 
+Answer:"""
+
 # SiteMap loader
 LANGGRAPH_DOCS = [
     "https://langchain-ai.github.io/langgraph/",
