@@ -26,10 +26,6 @@ $ jupyter notebook
 * Sign up [here](https://docs.smith.langchain.com/) 
 *  Set `LANGCHAIN_API_KEY`, `LANGCHAIN_TRACING_V2=true` .env file.
 
-### Tavily for web search
-
-Tavily Search API is a search engine optimized for LLMs and RAG, aimed at efficient, quick, and persistent search results. You can sign up for an API key [here](https://tavily.com/). It's easy to sign up and offers a generous free tier. Some lessons (in Module 4) will use Tavily. Set `TAVILY_API_KEY` in .env file.
-
 ### Set up LangGraph Studio
 
 * Currently Studio only has macOS support
