@@ -2,6 +2,27 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.vectorstores import Chroma
 from langchain_openai import OpenAIEmbeddings
+import uuid
+
+RAG_PROMPT = """You are an assistant for question-answering tasks. 
+Use the following pieces of retrieved context to answer the question. 
+If you don't know the answer, just say that you don't know. 
+Use three sentences maximum and keep the answer concise.
+
+Question: {question} 
+Context: {context} 
+Answer:"""
+
+RAG_PROMPT_WITH_MESSAGES = """You are an assistant for question-answering tasks. 
+Use the following pieces of retrieved context to answer the latest question in the conversation. 
+If you don't know the answer, just say that you don't know. 
+The pre-existing conversation may provide important context to the question.
+Use three sentences maximum and keep the answer concise.
+
+Conversation: {conversation}
+Context: {context} 
+Answer:"""
+
 
 LANGGRAPH_DOCS = [
     "https://langchain-ai.github.io/langgraph/",
@@ -24,7 +45,7 @@ LANGGRAPH_DOCS = [
     "https://langchain-ai.github.io/langgraph/concepts/faq/"
 ]
 
-def get_vector_db_retriever():
+def get_vector_db_retriever(id: str):
     # Set embeddings
     embd = OpenAIEmbeddings()
     # Docs to index
@@ -40,7 +61,7 @@ def get_vector_db_retriever():
     # Add to vectorstore
     vectorstore = Chroma.from_documents(
         documents=doc_splits,
-        collection_name="rag-chroma",
+        collection_name=f"rag-chroma-{id}",
         embedding=embd,
     )
     retriever = vectorstore.as_retriever(lambda_mult=0)
