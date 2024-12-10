@@ -1,7 +1,14 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAIEmbeddings
+from langchain_openai import AzureOpenAIEmbeddings
+from azure.identity import InteractiveBrowserCredential
+
+credential = InteractiveBrowserCredential()
+
+def get_token():
+    token = credential.get_token("https://cognitiveservices.azure.com/.default")
+    return token.token
 
 RAG_PROMPT = """You are an assistant for question-answering tasks. 
 Use the following pieces of retrieved context to answer the question. 
@@ -46,7 +53,12 @@ LANGGRAPH_DOCS = [
 
 def get_vector_db_retriever():
     # Set embeddings
-    embd = OpenAIEmbeddings()
+    embd = AzureOpenAIEmbeddings(
+        api_version="2024-03-01-preview",
+        azure_endpoint="https://deployment.openai.azure.com/",
+        azure_deployment="gpt-4o",
+        azure_ad_token_provider=get_token
+    )
     # Docs to index
     urls = LANGGRAPH_DOCS
     # Load
