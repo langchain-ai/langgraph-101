@@ -5,6 +5,7 @@ langsmith
 langchain-community
 langchain-core
 langchain-openai
+langchain-experimental
 notebook
 python-dotenv
 chromadb

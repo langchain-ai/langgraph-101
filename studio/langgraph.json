@@ -1,10 +1,10 @@
 {
     "dockerfile_lines": [],
     "graphs": {
-      "simple_rag": "./simple_rag.py:graph",
-      "corrective_rag": "./corrective_rag.py:graph",
-      "query_expansion": "./query_expansion.py:graph",
-      "hil": "./hil.py:graph"
+      "Simple RAG": "./simple_rag.py:graph",
+      "Corrective RAG": "./corrective_rag.py:graph",
+      "Query Analysis RAG": "./query_expansion.py:graph",
+      "Human In the Loop": "./hil.py:graph"
     },
     "env": "./.env",
     "python_version": "3.11",
