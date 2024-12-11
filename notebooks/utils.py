@@ -35,20 +35,6 @@ LANGGRAPH_DOCS = [
     "https://langchain-ai.github.io/langgraph/tutorials/customer-support/customer-support/",
     "https://langchain-ai.github.io/langgraph/tutorials/chatbots/information-gather-prompting/",
     "https://langchain-ai.github.io/langgraph/tutorials/code_assistant/langgraph_code_assistant/",
-    "https://langchain-ai.github.io/langgraph/tutorials/multi_agent/multi-agent-collaboration/",
-    "https://langchain-ai.github.io/langgraph/tutorials/multi_agent/agent_supervisor/",
-    "https://langchain-ai.github.io/langgraph/tutorials/multi_agent/hierarchical_agent_teams/",
-    "https://langchain-ai.github.io/langgraph/tutorials/plan-and-execute/plan-and-execute/",
-    "https://langchain-ai.github.io/langgraph/tutorials/rewoo/rewoo/",
-    "https://langchain-ai.github.io/langgraph/tutorials/llm-compiler/LLMCompiler/",
-    "https://langchain-ai.github.io/langgraph/concepts/high_level/",
-    "https://langchain-ai.github.io/langgraph/concepts/low_level/",
-    "https://langchain-ai.github.io/langgraph/concepts/agentic_concepts/",
-    "https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/",
-    "https://langchain-ai.github.io/langgraph/concepts/multi_agent/",
-    "https://langchain-ai.github.io/langgraph/concepts/persistence/",
-    "https://langchain-ai.github.io/langgraph/concepts/streaming/",
-    "https://langchain-ai.github.io/langgraph/concepts/faq/"
 ]
 
 def get_vector_db_retriever():
