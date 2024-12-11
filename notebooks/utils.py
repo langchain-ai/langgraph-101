@@ -54,9 +54,9 @@ LANGGRAPH_DOCS = [
 def get_vector_db_retriever():
     # Set embeddings
     embd = AzureOpenAIEmbeddings(
-        api_version="2024-03-01-preview",
+        openai_api_version="2024-03-01-preview",
         azure_endpoint="https://deployment.openai.azure.com/",
-        azure_deployment="gpt-4o",
+        deployment="text-embedding-3-large",
         azure_ad_token_provider=get_token
     )
     # Docs to index
