@@ -1,7 +1,7 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.vectorstores import Chroma
-from langchain_openai import AzureOpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from azure.identity import InteractiveBrowserCredential
 
 credential = InteractiveBrowserCredential()
@@ -39,12 +39,13 @@ LANGGRAPH_DOCS = [
 
 def get_vector_db_retriever():
     # Set embeddings
-    embd = AzureOpenAIEmbeddings(
-        openai_api_version="2024-03-01-preview",
-        azure_endpoint="https://deployment.openai.azure.com/",
-        model="text-embedding-3-large",
-        azure_ad_token_provider=get_token
-    )
+    # embd = AzureOpenAIEmbeddings(
+    #     openai_api_version="2024-03-01-preview",
+    #     azure_endpoint="https://deployment.openai.azure.com/",
+    #     model="text-embedding-3-large",
+    #     azure_ad_token_provider=get_token
+    # )
+    embd = OpenAIEmbeddings()
     # Docs to index
     urls = LANGGRAPH_DOCS
     # Load
