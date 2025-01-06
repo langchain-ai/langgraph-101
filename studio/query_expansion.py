@@ -18,6 +18,10 @@ retriever = get_vector_db_retriever(id="3")
 
 llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
 
+# Azure OpenAI Alternative
+# from models import AZURE_OPENAI_GPT_4O
+# llm = AZURE_OPENAI_GPT_4O
+
 def custom_documents_reducer(existing, update):
     # If we passed in a dictionary that asks for "overwrite", then we return the updated documents only
     if isinstance(update, dict) and update["type"] == "overwrite":

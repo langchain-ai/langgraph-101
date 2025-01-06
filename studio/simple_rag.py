@@ -14,6 +14,10 @@ retriever = get_vector_db_retriever(id="1")
 
 llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
 
+# Azure OpenAI Alternative
+# from models import AZURE_OPENAI_GPT_4O
+# llm = AZURE_OPENAI_GPT_4O
+
 class GraphState(TypedDict):
     question: str
     generation: Optional[str]

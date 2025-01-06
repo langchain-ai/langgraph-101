@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from utils import get_vector_db_retriever, RAG_PROMPT_WITH_MESSAGES
+from utils import get_vector_db_retriever, RAG_PROMPT_WITH_CHAT_HISTORY
 from langchain_openai import ChatOpenAI
 from langchain.schema import Document
 from typing import List, Optional, Annotated
@@ -18,6 +18,10 @@ load_dotenv(dotenv_path="./.env", override=True)
 retriever = get_vector_db_retriever(id="4")
 
 llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
+
+# Azure OpenAI Alternative
+# from models import AZURE_OPENAI_GPT_4O
+# llm = AZURE_OPENAI_GPT_4O
 
 def custom_documents_reducer(existing, update):
     # If we passed in a dictionary that asks for "overwrite", then we return the updated documents only
@@ -119,10 +123,9 @@ def generate_response(state: GraphState):
     formatted_docs = "\n\n".join(doc.page_content for doc in documents)
     
     # RAG generation
-    rag_prompt_formatted = RAG_PROMPT_WITH_MESSAGES.format(context=formatted_docs, conversation=conversation)
+    rag_prompt_formatted = RAG_PROMPT_WITH_CHAT_HISTORY.format(context=formatted_docs, conversation=conversation)
     generation = llm.invoke([HumanMessage(content=rag_prompt_formatted)])
     return {
-        "documents": documents,
         "generation": generation,
         "attempted_generations": attempted_generations + 1   # In our state update, we increment attempted_generations
     }
@@ -258,10 +261,6 @@ def configure_memory(state):
         "documents": {"type": "overwrite", "documents": []}    # Reset documents to empty
     }
 
-# no-op node that should be interrupted on
-def human_feedback(state: GraphState):
-    pass
-
 # Define our graph
 graph_builder = StateGraph(GraphState, input=InputState, output=OutputState)
 graph_builder.add_node("generate_rewritten_queries", generate_rewritten_queries)
@@ -269,7 +268,6 @@ graph_builder.add_node("retrieve_documents", retrieve_documents)
 graph_builder.add_node("generate_response", generate_response)
 graph_builder.add_node("grade_documents", grade_documents)
 graph_builder.add_node("configure_memory", configure_memory)
-graph_builder.add_node("human_feedback", human_feedback)
 
 graph_builder.add_edge(START, "generate_rewritten_queries")
 graph_builder.add_conditional_edges(
@@ -283,9 +281,8 @@ graph_builder.add_conditional_edges(
     decide_to_generate,
     {
         "some relevant": "generate_response",
-        "none relevant": "human_feedback"
+        "none relevant": END
     })
-graph_builder.add_edge("human_feedback", "generate_response")
 graph_builder.add_conditional_edges(
     "generate_response",
     grade_hallucinations,
@@ -294,5 +291,4 @@ graph_builder.add_conditional_edges(
         "not supported": "generate_response"
     })
 graph_builder.add_edge("configure_memory", END)
-
-graph = graph_builder.compile(interrupt_before=["human_feedback"])
+graph = graph_builder.compile()
