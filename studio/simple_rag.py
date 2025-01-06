@@ -15,14 +15,6 @@ retriever = get_vector_db_retriever(id="1")
 llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
 
 class GraphState(TypedDict):
-    """
-    Represents the state of our graph.
-
-    Attributes:
-        question: question
-        generation: LLM generation
-        documents: list of documents
-    """
     question: str
     generation: Optional[str]
     documents: Optional[List[Document]]
