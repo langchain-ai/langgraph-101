@@ -22,3 +22,19 @@ git clone https://github.com/langchain-ai/langgraph-101.git
 
 Navigate to setup.md in the /notebooks/ folder and follow instructions there! If you run into issues with setting up the python environment or acquiring the necessary API keys due to any restrictions (ex. corporate policy), contact your LangChain representative and we'll find a work-around!
 
+### Azure OpenAI Instructions
+
+If you are using AzureOpenAI instead of OpenAI, there are a few things you need to do.
+
+1. Set necessary environment variables in a .env file. Specifically, make sure you set
+- AZURE_OPENAI_API_KEY=
+- AZURE_OPENAI_ENDPOINT=
+- AZURE_OPENAI_API_VERSION=
+
+2. Navigate to `models.py`, and uncomment the code for 
+- `AZURE_OPENAI_EMBEDDING_MODEL`= ...
+- `AZURE_OPENAI_GPT_4O`= ...
+
+3. Navigate to `utils.py` and use AzureOpenAIEmbeddings instead of OpenAIEmbeddings
+
+4. In the notebooks, use AzureOpenAI (code already provided in cells) where applicable, instead of OpenAI (default)
