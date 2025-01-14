@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from utils import get_vector_db_retriever, RAG_PROMPT
+from utils import get_vector_store, RAG_PROMPT
 from langchain_openai import ChatOpenAI
 from langchain.schema import Document
 from typing import List, Optional
@@ -12,7 +12,9 @@ ATTEMPTED_GENERATION_MAX = 3
 
 load_dotenv(dotenv_path="./.env", override=True)
 
-retriever = get_vector_db_retriever(id="2")
+ID="1"
+NAMESPACE="langgraph-docs"
+store = get_vector_store(ID, NAMESPACE)
 
 llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
 
@@ -46,7 +48,7 @@ def retrieve_documents(state: GraphState):
     print("---RETRIEVE DOCUMENTS---")
     question = state["question"]
     # Retrieval
-    documents = retriever.invoke(question)
+    documents = [item.value for item in store.search((ID, NAMESPACE), query=question, limit=4)]
     return {"documents": documents, "question": question}
 
 def generate_response(state: GraphState):

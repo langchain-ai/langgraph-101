@@ -2,13 +2,18 @@
     "dockerfile_lines": [],
     "graphs": {
       "Simple RAG": "./simple_rag.py:graph",
-      "Corrective RAG": "./corrective_rag.py:graph",
-      "Query Analysis RAG": "./query_expansion.py:graph",
-      "Human In the Loop": "./hil.py:graph"
+      "Load LangGraph Docs": "./load_documents.py:graph"
     },
     "env": "./.env",
     "python_version": "3.11",
     "dependencies": [
       "."
-    ]
+    ],
+    "store": {
+      "index": {
+        "embed": "openai:text-embeddings-3-small",
+        "dims": 1536,
+        "fields": ["$"]
+      }
+    }
   }

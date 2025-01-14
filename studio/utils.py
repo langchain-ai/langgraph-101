@@ -1,6 +1,7 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
-from langchain_community.vectorstores import Chroma
+from langgraph.store.memory import InMemoryStore, PutOp
+from langchain.embeddings import init_embeddings
 from models import OPENAI_EMBEDDING_MODEL
 # from models import AZURE_OPENAI_EMBEDDING_MODEL
 
@@ -44,22 +45,32 @@ LANGGRAPH_DOCS = [
     "https://langchain-ai.github.io/langgraph/concepts/faq/"
 ]
 
-def get_vector_db_retriever(id: str):
-    # Load documents to index
+def get_vector_store(id: str, namespace: str):
+    embeddings = init_embeddings("openai:text-embedding-3-small")
+    store = InMemoryStore(index={"embed": embeddings, "dims": 1536})
+
+    namespace_for_memory = (id, namespace)
+    existing_data = store.search(namespace_for_memory, limit=1)
+    # If the data has already been added - then return the existing store
+    if len(existing_data) > 0:    
+        return store
+    
+    # If not, then add the documents!
     docs = [WebBaseLoader(url).load() for url in LANGGRAPH_DOCS]
     docs_list = [item for sublist in docs for item in sublist]
-    # Split documents into chunks
     text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
         chunk_size=200, chunk_overlap=0
     )
     doc_splits = text_splitter.split_documents(docs_list)
-    # Add document splits to an in-memory Vector DB
-    vectorstore = Chroma.from_documents(
-        documents=doc_splits,
-        collection_name=f"chroma-db-{id}",
-        embedding=OPENAI_EMBEDDING_MODEL,
-        # embedding=AZURE_OPENAI_EMBEDDING_MODEL
-    )
-    # Return our vectorstore retriever
-    retriever = vectorstore.as_retriever(lambda_mult=0)
-    return retriever
+    print(doc_splits)
+    ops = [
+        PutOp(
+            namespace=(id, namespace),
+            key=f"doc-{i}",
+            value=split,
+            index=["metadata.title", "metadata.description", "page_content"]
+        )
+        for i, split in enumerate(doc_splits)
+    ]
+    store.batch(ops)
+    return store

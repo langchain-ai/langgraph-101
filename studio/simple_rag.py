@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from utils import get_vector_db_retriever, RAG_PROMPT
+from utils import RAG_PROMPT
 from langchain_openai import ChatOpenAI
 from langchain.schema import Document
 from typing import List, Optional
@@ -10,7 +10,8 @@ from langgraph.graph import StateGraph, START, END
 
 load_dotenv(dotenv_path="./.env", override=True)
 
-retriever = get_vector_db_retriever(id="1")
+ID="1"
+NAMESPACE="langgraph-docs"
 
 llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
 
@@ -23,7 +24,7 @@ class GraphState(TypedDict):
     generation: Optional[str]
     documents: Optional[List[Document]]
 
-def retrieve_documents(state: GraphState):
+def retrieve_documents(state: GraphState, config, store):
     """
     Retrieve documents
 
@@ -36,7 +37,7 @@ def retrieve_documents(state: GraphState):
     print("---RETRIEVE DOCUMENTS---")
     question = state["question"]
     # Retrieval
-    documents = retriever.invoke(question)
+    documents = [item.value for item in store.search((ID, NAMESPACE), query=question, limit=4)]
     return {"documents": documents, "question": question}
 
 def generate_response(state: GraphState):
