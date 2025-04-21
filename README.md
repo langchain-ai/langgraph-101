@@ -3,7 +3,7 @@
 Welcome to LangGraph 101! 
 
 ## Introduction
-Welcome to LangGraph 101! In this session, you will learn about the fundamentals of LangGraph through a series of notebooks. This is a condensed version of LangChain Academy, and is intended to be run in a session with a LangChain engineer. If you're interested in going into more depth, or working through a tutorial on your own, check out LangChain Academy [here](https://academy.langchain.com/courses/intro-to-langgraph)! LangChain Academy has helpful pre-recorded videos from one of our LangChain engineers.
+In this session, you will learn about the fundamentals of LangGraph through one of our notebooks. This is a condensed version of LangChain Academy, and is intended to be run in a session with a LangChain engineer. If you're interested in going into more depth, or working through a tutorial on your own, check out LangChain Academy [here](https://academy.langchain.com/courses/intro-to-langgraph)! LangChain Academy has helpful pre-recorded videos from one of our LangChain engineers.
 
 ## Context
 
@@ -20,20 +20,20 @@ To tackle this problem, we’ve built [LangGraph](https://langchain-ai.github.io
 git clone https://github.com/langchain-ai/langgraph-101.git
 ```
 
-Navigate to setup.md in the /notebooks/ folder and follow instructions there! If you run into issues with setting up the python environment or acquiring the necessary API keys due to any restrictions (ex. corporate policy), contact your LangChain representative and we'll find a work-around!
+Navigate to setup.md and follow instructions there! If you run into issues with setting up the python environment or acquiring the necessary API keys due to any restrictions (ex. corporate policy), contact your LangChain representative and we'll find a work-around!
 
 ### Azure OpenAI Instructions
 
 If you are using AzureOpenAI instead of OpenAI, there are a few things you need to do.
 
 1. Set necessary environment variables in a .env file. Specifically, make sure you set
-- AZURE_OPENAI_API_KEY=
-- AZURE_OPENAI_ENDPOINT=
-- AZURE_OPENAI_API_VERSION=
+    - AZURE_OPENAI_API_KEY=
+    - AZURE_OPENAI_ENDPOINT=
+    - AZURE_OPENAI_API_VERSION=
 
 2. Navigate to `models.py`, and uncomment the code for 
-- `AZURE_OPENAI_EMBEDDING_MODEL`= ...
-- `AZURE_OPENAI_GPT_4O`= ...
+    - `AZURE_OPENAI_EMBEDDING_MODEL`= ...
+    - `AZURE_OPENAI_GPT_4O`= ...
 
 3. Navigate to `utils.py` and use AzureOpenAIEmbeddings instead of OpenAIEmbeddings
 

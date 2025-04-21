@@ -6,8 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
-lg-101-env/
-notebooks/state_db
+venv/
+notebooks/langgraph-docs-db
+notebooks/chinook.db
 
 # Distribution / packaging
 .Python

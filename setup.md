@@ -6,8 +6,8 @@ If you run into issues with setting up the python environment or acquiring the n
 ### Create an environment and install dependencies  
 ```
 $ cd langgraph-101
-$ python3 -m venv lg-101-env
-$ source lg-101-env/bin/activate
+$ python3 -m venv venv
+$ source venv/bin/activate
 $ pip install -r requirements.txt
 ```
 
@@ -21,16 +21,7 @@ $ jupyter notebook
 * If you don't have an OpenAI API key, you can sign up [here](https://openai.com/index/openai-api/).
 *  Set `OPENAI_API_KEY` in the .env file.
 
-### Sign up for LangSmith
+### [Optional] Sign up for LangSmith
 
 * Sign up [here](https://docs.smith.langchain.com/) 
-*  Set `LANGCHAIN_API_KEY`, `LANGCHAIN_TRACING_V2=true` .env file.
-
-### Set up LangGraph Studio
-
-* Currently Studio only has macOS support
-* Download the latest `.dmg` file [here](https://github.com/langchain-ai/langgraph-studio?tab=readme-ov-file#download)
-* Install Docker desktop for Mac [here](https://docs.docker.com/engine/install/)
-
-### Running Studio
-To use Studio, you will need to fill in the separate .env file in the /studio/ folder with the relevant API keys. Once you start up LangGraph studio, you can load in the entire /studio folder from this repository.
+*  Set `LANGSMITH_API_KEY`, `LANGSMITH_TRACING`, and `LANGSMITH_PROJECT` in the .env file.

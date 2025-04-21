@@ -1,0 +1,13 @@
+{
+    "dockerfile_lines": [],
+    "graphs": {
+      "Simple RAG": "./studio/simple_rag.py:graph",
+      "Corrective RAG": "./studio/corrective_rag.py:graph",
+      "Human in the Loop RAG": "./studio/hil.py:graph"
+    },
+    "env": ".env",
+    "python_version": "3.11",
+    "dependencies": [
+      "."
+    ]
+  }

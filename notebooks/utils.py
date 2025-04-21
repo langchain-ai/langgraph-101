@@ -1,27 +1,10 @@
+import os
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
-from langchain_community.vectorstores import Chroma
-from models import OPENAI_EMBEDDING_MODEL
-# from models import AZURE_OPENAI_EMBEDDING_MODEL
-
-RAG_PROMPT = """You are an assistant for question-answering tasks. 
-Use the following pieces of retrieved context to answer the question. 
-If you don't know the answer, just say that you don't know. 
-Use three sentences maximum and keep the answer concise.
-
-Question: {question} 
-Context: {context} 
-Answer:"""
-
-RAG_PROMPT_WITH_CHAT_HISTORY = """You are an assistant for question-answering tasks. 
-Use the following pieces of retrieved context to answer the latest question in the conversation. 
-If you don't know the answer, just say that you don't know. 
-The pre-existing conversation may provide important context to the question.
-Use three sentences maximum and keep the answer concise.
-
-Conversation: {conversation}
-Context: {context} 
-Answer:"""
+from langchain_community.utilities import SQLDatabase
+from langchain_chroma import Chroma
+# NOTE: Adjust this import to use a different embedding model
+from models import OPENAI_EMBEDDING_MODEL as EMBEDDING_MODEL
 
 LANGGRAPH_DOCS = [
     "https://langchain-ai.github.io/langgraph/",
@@ -44,22 +27,29 @@ LANGGRAPH_DOCS = [
     "https://langchain-ai.github.io/langgraph/concepts/faq/"
 ]
 
-def get_vector_db_retriever():
-    # Load documents to index
+def get_langgraph_docs_retriever():
+    # If there is a vectorstore at this path, early return as it is already persisted
+    if os.path.exists("langgraph-docs-db"):
+        print("Loading vectorstore from disk...")
+        vectorstore = Chroma(
+            collection_name="langgraph-docs",
+            embedding_function=EMBEDDING_MODEL,
+            persist_directory="langgraph-docs-db"
+        )
+        return vectorstore.as_retriever(lambda_mult=0)
+
+    # Otherwise, load the documents and persist to the vectorstore
     docs = [WebBaseLoader(url).load() for url in LANGGRAPH_DOCS]
     docs_list = [item for sublist in docs for item in sublist]
-    # Split documents into chunks
     text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
         chunk_size=200, chunk_overlap=0
     )
     doc_splits = text_splitter.split_documents(docs_list)
-    # Add document splits to an in-memory Vector DB
-    vectorstore = Chroma.from_documents(
-        documents=doc_splits,
-        collection_name="chroma-db",
-        embedding=OPENAI_EMBEDDING_MODEL,
-        # embedding=AZURE_OPENAI_EMBEDDING_MODEL
+    vectorstore = Chroma(
+        collection_name="langgraph-docs",
+        embedding_function=EMBEDDING_MODEL,
+        persist_directory="langgraph-docs-db"
     )
-    # Return our vectorstore retriever
-    retriever = vectorstore.as_retriever(lambda_mult=0)
-    return retriever
+    vectorstore.add_documents(doc_splits)
+    print("Vectorstore created and persisted to disk")
+    return vectorstore.as_retriever(lambda_mult=0)
