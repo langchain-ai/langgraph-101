@@ -6,7 +6,6 @@ langsmith
 langchain-community
 langchain-core
 langchain-openai
-langchain-anthropic
 langchain-experimental
 notebook
 python-dotenv
@@ -19,3 +18,5 @@ ipython
 pyppeteer
 langgraph-supervisor
 langgraph-cli[inmem]
+langchain-anthropic
+langchain-google-vertexai

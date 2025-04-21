@@ -1,4 +1,6 @@
 from langchain_openai import OpenAIEmbeddings, AzureOpenAIEmbeddings, AzureChatOpenAI
+from langchain_anthropic import ChatAnthropic
+from langchain_vertexai import ChatVertexAI
 from azure.identity import InteractiveBrowserCredential
 
 credential = InteractiveBrowserCredential()
@@ -45,4 +47,16 @@ Chat Models
 #     azure_endpoint="https://deployment.openai.azure.com/",
 #     azure_deployment="gpt-4o",
 #     azure_ad_token_provider=get_token
+# )
+
+# Anthropic Sonnet 3.5 
+# ANTHROPIC_SONNET_3_5 = ChatAnthropic(
+#     model="claude-3-5-sonnet-20240620",
+#     streaming=True
+# )
+
+# Vertex AI Gemini 1.5 Flash
+# VERTEX_AI_GEMINI_1_5_FLASH = ChatVertexAI(
+#     model="gemini-1.5-flash-002",
+#     streaming=True
 # )
