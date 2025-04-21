@@ -1,4 +1,7 @@
 import os
+from IPython.display import Image, display
+from langchain_core.runnables.graph import MermaidDrawMethod
+import nest_asyncio
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.utilities import SQLDatabase
@@ -53,3 +56,8 @@ def get_langgraph_docs_retriever():
     vectorstore.add_documents(doc_splits)
     print("Vectorstore created and persisted to disk")
     return vectorstore.as_retriever(lambda_mult=0)
+
+def visualize_graph(graph):
+    # display(Image(graph.draw_mermaid_png()))
+    nest_asyncio.apply()
+    display(Image(graph.get_graph().draw_mermaid_png(draw_method=MermaidDrawMethod.PYPPETEER)))
