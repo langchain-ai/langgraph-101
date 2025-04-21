@@ -18,3 +18,4 @@ openai
 ipython
 pyppeteer
 langgraph-supervisor
+langgraph-cli[inmem]

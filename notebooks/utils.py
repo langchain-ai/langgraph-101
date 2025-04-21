@@ -4,7 +4,6 @@ from langchain_core.runnables.graph import MermaidDrawMethod
 import nest_asyncio
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
-from langchain_community.utilities import SQLDatabase
 from langchain_chroma import Chroma
 # NOTE: Adjust this import to use a different embedding model
 from models import OPENAI_EMBEDDING_MODEL as EMBEDDING_MODEL

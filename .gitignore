@@ -6,9 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+.langgraph_api
 venv/
 notebooks/langgraph-docs-db
 notebooks/chinook.db
+langgraph-docs-db/
 
 # Distribution / packaging
 .Python
