@@ -1,6 +1,6 @@
 from langchain_openai import OpenAIEmbeddings, AzureOpenAIEmbeddings, AzureChatOpenAI
 from langchain_anthropic import ChatAnthropic
-from langchain_vertexai import ChatVertexAI
+from langchain_google_vertexai import ChatVertexAI
 from azure.identity import InteractiveBrowserCredential
 
 credential = InteractiveBrowserCredential()
