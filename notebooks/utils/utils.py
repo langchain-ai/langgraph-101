@@ -6,7 +6,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_chroma import Chroma
 # NOTE: Adjust this import to use a different embedding model
-from models import OPENAI_EMBEDDING_MODEL as EMBEDDING_MODEL
+from notebooks.utils.models import OPENAI_EMBEDDING_MODEL as EMBEDDING_MODEL
 
 LANGGRAPH_DOCS = [
     "https://langchain-ai.github.io/langgraph/",
