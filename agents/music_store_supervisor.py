@@ -34,7 +34,7 @@ class State(TypedDict):
 # Create supervisor workflow
 supervisor_prebuilt_workflow = create_supervisor(
     agents=[invoice_agent, music_agent],
-    output_mode="full_history", # alternative is last_message
+    output_mode="last_message", # alternative is full_history
     model=llm,
     prompt=(supervisor_prompt), 
     state_schema=State
