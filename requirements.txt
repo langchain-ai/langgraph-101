@@ -21,3 +21,4 @@ langgraph-cli[inmem]
 langchain-anthropic
 langchain-google-vertexai
 openevals
+langgraph-swarm
