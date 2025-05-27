@@ -5,6 +5,7 @@ If you run into issues with setting up the python environment or acquiring the n
 
 ### Create an environment and install dependencies  
 ```
+# Ensure you have a recent version of pip and python installed
 $ cd langgraph-101
 $ python3 -m venv venv
 $ source venv/bin/activate
