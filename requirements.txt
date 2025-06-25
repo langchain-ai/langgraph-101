@@ -22,3 +22,4 @@ langchain-anthropic
 langchain-google-vertexai
 openevals
 langgraph-swarm
+langchain-aws
