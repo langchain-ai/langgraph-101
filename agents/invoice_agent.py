@@ -1,7 +1,7 @@
 from agents.utils import llm, get_engine_for_chinook_db
 from langchain_community.utilities.sql_database import SQLDatabase
 from typing_extensions import TypedDict
-from typing import Annotated, Optional
+from typing import Annotated, Optional, NotRequired
 from langgraph.graph.message import AnyMessage, add_messages
 from langgraph.managed.is_last_step import RemainingSteps
 
@@ -10,11 +10,13 @@ db = SQLDatabase(engine)
 
 from langchain_core.tools import tool
 
-class State(TypedDict):
+class InputState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
-    customer_id: Optional[str]
-    loaded_memory: Optional[str]
-    remaining_steps: Optional[RemainingSteps]
+
+class State(InputState):
+    customer_id: NotRequired[str]
+    loaded_memory: NotRequired[str]
+    remaining_steps: NotRequired[RemainingSteps]
 
 @tool 
 def get_invoices_by_customer_sorted_by_date(customer_id: str) -> list[dict]:
