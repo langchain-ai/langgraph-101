@@ -1,4 +1,5 @@
 from langchain_openai import OpenAIEmbeddings, AzureOpenAIEmbeddings, AzureChatOpenAI
+from langchain_google_vertexai import VertexAIEmbeddings
 from langchain_anthropic import ChatAnthropic
 from langchain_google_vertexai import ChatVertexAI
 from azure.identity import InteractiveBrowserCredential
@@ -16,7 +17,7 @@ def get_token():
 Embedding Models
 """
 
-OPENAI_EMBEDDING_MODEL = OpenAIEmbeddings()
+EMBEDDING_MODEL = VertexAIEmbeddings(model_name="text-embedding-large-exp-03-07")
 
 # Azure OpenAI: Using Environment Variables
 # AZURE_OPENAI_EMBEDDING_MODEL = AzureOpenAIEmbeddings(
