@@ -3,15 +3,17 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_chroma import Chroma
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_google_vertexai import ChatVertexAI, VertexAIEmbeddings
 
 # NOTE: Configure the LLM that you want to use
-llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
+# llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
 # llm = ChatAnthropic(model_name="claude-3-5-sonnet-20240620", temperature=0)
-# llm = ChatVertexAI(model_name="gemini-1.5-flash-002", temperature=0)
+llm = ChatVertexAI(model_name="gemini-2.5-flash", temperature=0)
 
 
-# NOTE: Configure the embedding model that you want to use
-embedding_model = OpenAIEmbeddings()
+# NOTE: Configure the embedding model thaAIEmbeddings()t you want to use
+embedding_model = VertexAIEmbeddings(model_name="text-embedding-large-exp-03-07")
+
 
 LANGGRAPH_DOCS = [
     "https://langchain-ai.github.io/langgraph/",
