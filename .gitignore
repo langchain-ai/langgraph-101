@@ -85,6 +85,9 @@ target/
 # Jupyter Notebook
 .ipynb_checkpoints
 
+# Jupyter notebook metadata filtering
+*.ipynb filter=jupyternotebook
+
 # IPython
 profile_default/
 ipython_config.py
@@ -167,3 +170,5 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+
+vertex_credentials.json
