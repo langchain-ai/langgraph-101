@@ -42,4 +42,4 @@ supervisor_prebuilt_workflow = create_supervisor(
     state_schema=State
 )
 
-graph = supervisor_prebuilt_workflow.compile(name="music_catalog_subagent")
+graph = supervisor_prebuilt_workflow.compile(name="music_store_supervisor")
