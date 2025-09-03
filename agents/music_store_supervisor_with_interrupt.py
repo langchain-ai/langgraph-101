@@ -1,17 +1,16 @@
 from agents.invoice_agent import graph as invoice_agent
 from agents.music_agent import graph as music_agent
-from agents.utils import llm
+from agents.utils import llm, get_engine_for_chinook_db
 
 from langgraph.graph import StateGraph, START, END
 from typing import Annotated, Optional, NotRequired
 from langgraph.graph.message import AnyMessage, add_messages
 from langgraph.managed.is_last_step import RemainingSteps
 from typing_extensions import TypedDict
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langchain_core.runnables import RunnableConfig
 import ast
 from langchain_community.utilities.sql_database import SQLDatabase
-from agents.utils import get_engine_for_chinook_db
 
 engine = get_engine_for_chinook_db()
 db = SQLDatabase(engine)
@@ -20,6 +19,8 @@ supervisor_prompt = """You are an expert customer support assistant for a digita
 You are dedicated to providing exceptional service and ensuring customer queries are answered thoroughly, and have a team of subagents that you can use to help answer queries from customers. 
 Your primary role is to serve as a supervisor/planner for this multi-agent team that helps answer queries from customers. Always respond to the customer through summarizing the conversation, including individual responses from subagents. 
 If a question is unrelated to music or invoice, politely remind the customer regarding your scope of work. Do not answer unrelated answers. 
+
+If a customer has just been verified (customer_id is present in the state), acknowledge their successful verification before proceeding with their request.
 
 Your team is composed of two subagents that you can use to help answer the customer's request:
 1. music_catalog_information_subagent: this subagent has access to user's saved music preferences. It can also retrieve information about the digital music store's music 
@@ -119,7 +120,7 @@ def verify_info(state: State, config: RunnableConfig):
             customer_id = get_customer_id_from_identifier(identifier)
     
         if customer_id != "":
-            intent_message = SystemMessage(
+            intent_message = AIMessage(
                 content= f"Thank you for providing your information! I was able to verify your account with customer id {customer_id}."
             )
             return {
@@ -138,7 +139,7 @@ from langgraph.types import interrupt
 def human_input(state: State, config: RunnableConfig):
     """ No-op node that should be interrupted on """
     user_input = interrupt("Please provide input.")
-    return {"messages": [user_input]}
+    return {"messages": [HumanMessage(content=user_input)]}
 
 
 # conditional_edge
