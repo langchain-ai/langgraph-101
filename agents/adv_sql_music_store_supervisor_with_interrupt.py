@@ -1,5 +1,5 @@
 from agents.invoice_agent import graph as invoice_agent
-from agents.advanced_sql_agent import graph as music_agent
+from agents.adv_sql_agent import graph as music_agent
 from agents.utils import llm, get_engine_for_chinook_db
 
 from langgraph.graph import StateGraph, START, END
