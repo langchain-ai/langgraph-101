@@ -111,6 +111,8 @@ Additional context is provided below:
 Prior saved user preferences: {state.get("loaded_memory", "None")}
     
 Message history is also attached.  
+
+NOTE: If there's no results from the query, and you're confident it was the correct query, just say "No results found".
     """
     
     system_message = SystemMessage(content=generate_query_prompt)
