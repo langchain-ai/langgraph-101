@@ -28,9 +28,11 @@ toolkit = SQLDatabaseToolkit(db=db, llm=llm)
 # Get all the tools from the toolkit
 music_tools = toolkit.get_tools()
 
+# Put tools in a dictionary
+music_tools_dict = {tool.name: tool for tool in music_tools}
 
 # Get individual tools from our toolkit
-get_schema_tool = next(tool for tool in music_tools if tool.name == "sql_db_schema")
+get_schema_tool = music_tools_dict["sql_db_schema"]
 get_schema_node = ToolNode([get_schema_tool], name="get_schema")
 
 run_query_tool = next(tool for tool in music_tools if tool.name == "sql_db_query")
@@ -56,7 +58,7 @@ def list_tables(state: State):
     tool_message = list_tables_tool.invoke(tool_call)
     
     # Create a helpful response message
-    response = AIMessage(f"I found these tables in the database: {tool_message.content}")
+    response = AIMessage(f"I found these tables in our music database: {tool_message.content}. I'll now examine the relevant schemas to help with your music query.")
     
     return {"messages": [tool_call_message, tool_message, response]}
 
@@ -68,9 +70,17 @@ def call_get_schema(state: State):
     user_question = state["messages"][0].content if state["messages"] else ""
     
     # Create a prompt asking which tables are relevant
-    prompt = f"""Based on this question: '{user_question}'
-    and these available tables from the database,
-    decide which table schemas you need to see to answer the question.
+    prompt = f"""Based on this music-related question: '{user_question}'
+    and the available music database tables (Album, Artist, Customer, Employee, Genre, Invoice, InvoiceLine, MediaType, Playlist, PlaylistTrack, Track),
+    decide which table schemas you need to see to answer the customer's music catalog query.
+    
+    For music queries, you'll typically need:
+    - Artist table for artist information
+    - Album table for album details
+    - Track table for song information
+    - Genre table for music genres
+    - Playlist/PlaylistTrack tables for playlist information
+    
     Call the sql_db_schema tool with the relevant table names."""
     
     # Force the model to use the schema tool (tool_choice="any" means it MUST use a tool)
@@ -84,35 +94,32 @@ def call_get_schema(state: State):
 def generate_query(state: State):
     """Generate a SQL query based on the schemas and question."""
     generate_query_prompt = f"""
-You are an agent designed to interact with a SQL database.
-Given the table schemas you've seen and the user's question, create a syntactically correct SQLite query.
-    
-Important rules:
-- Limit results to at most 5 unless specified otherwise
-- Only select relevant columns, not all columns
-- Order by relevant columns to get interesting results
+You are a music store catalog specialist creating SQL queries to help customers discover music.
+Given the table schemas you've seen and the customer's music question, create a syntactically correct SQLite query.
+
+MUSIC QUERY GUIDELINES:
+- Focus on providing helpful music discovery information
+- Always include artist names with songs/albums for context
+- Limit results to at most 10 unless customer specifies otherwise
+- Order results by relevance (alphabetical by artist/album, or by popularity indicators)
+- Use proper JOINs to connect music relationships: Track → Album → Artist
+
+COMMON MUSIC QUERY PATTERNS:
+- Songs by artist: SELECT Track.Name, Album.Title, Artist.Name FROM Track JOIN Album ON Track.AlbumId = Album.AlbumId JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name LIKE '%Rolling Stones%'
+- Albums by artist: SELECT Album.Title, Artist.Name FROM Album JOIN Artist ON Album.ArtistId = Artist.ArtistId WHERE Artist.Name LIKE '%Beatles%'
+- Songs by genre: SELECT Track.Name, Artist.Name FROM Track JOIN Album ON Track.AlbumId = Album.AlbumId JOIN Artist ON Album.ArtistId = Artist.ArtistId JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Genre.Name LIKE '%Rock%'
+
+IMPORTANT RULES:
 - DO NOT make any DML statements (INSERT, UPDATE, DELETE, DROP etc.)
-- If getting song recommendations return the song, artist, and album name for each song.
+- Use LIKE with wildcards (%) for flexible artist/song matching
+- Always include relevant context (artist with song, album with track count, etc.)
+- If searching fails, try partial matches or similar spellings
 
-Example of how to write SQLite queries:
-SELECT t.Name as Song, ar.Name as Artist, al.Title as Album
-FROM Track t
-JOIN Genre g ON t.GenreId = g.GenreId
-JOIN Album al ON t.AlbumId = al.AlbumId
-JOIN Artist ar ON al.ArtistId = ar.ArtistId
-WHERE g.Name = 'Rock'
-ORDER BY ar.Name, al.Title
-LIMIT 5
-
-Return the response in a nice format for the user to read.
-
-Additional context is provided below: 
-
-Prior saved user preferences: {state.get("loaded_memory", "None")}
+Customer's saved music preferences: {state.get("loaded_memory", "None")}
     
 Message history is also attached.  
 
-NOTE: If there's no results from the query, and you're confident it was the correct query, just say "No results found".
+NOTE: If there are no results and you're confident the query was correct, just say "No results found".
     """
     
     system_message = SystemMessage(content=generate_query_prompt)
@@ -128,7 +135,9 @@ NOTE: If there's no results from the query, and you're confident it was the corr
 def check_query(state: State):
     """Double-check the SQL query for common mistakes before executing."""
     check_query_prompt = """
-    You are a SQL expert. Double check this SQLite query for common mistakes:
+    You are a music database SQL expert. Double check this SQLite query for common mistakes, especially for music catalog queries:
+    
+    GENERAL SQL ISSUES:
     - Using NOT IN with NULL values
     - Using UNION when UNION ALL should be used  
     - Using BETWEEN for exclusive ranges
@@ -136,7 +145,15 @@ def check_query(state: State):
     - Proper column names for joins
     - Correct function arguments
     
-    If there are mistakes, rewrite the query. Otherwise, reproduce the original query.
+    MUSIC-SPECIFIC CHECKS:
+    - Ensure proper JOINs between Track → Album → Artist for complete information
+    - Use LIKE with wildcards (%) for artist/song name matching instead of exact equals
+    - Include Artist.Name in results when showing Track.Name or Album.Title
+    - Check that Genre joins are correct (Track.GenreId = Genre.GenreId)
+    - Verify playlist queries use PlaylistTrack as the junction table
+    - Make sure results are ordered meaningfully (by Artist.Name, Album.Title, etc.)
+    
+    If there are mistakes, rewrite the query with corrections. Otherwise, reproduce the original query.
     You will call sql_db_query to execute the query after this check.
     """
     
