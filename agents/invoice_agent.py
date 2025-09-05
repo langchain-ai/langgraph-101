@@ -1,9 +1,10 @@
 from agents.utils import llm, get_engine_for_chinook_db
 from langchain_community.utilities.sql_database import SQLDatabase
 from typing_extensions import TypedDict
-from typing import Annotated, Optional, NotRequired
+from typing import Annotated, NotRequired
 from langgraph.graph.message import AnyMessage, add_messages
 from langgraph.managed.is_last_step import RemainingSteps
+from langgraph.prebuilt import InjectedState
 
 engine = get_engine_for_chinook_db()
 db = SQLDatabase(engine)
@@ -14,39 +15,35 @@ class InputState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
 
 class State(InputState):
-    customer_id: NotRequired[str]
+    customer_id: NotRequired[int]
     loaded_memory: NotRequired[str]
     remaining_steps: NotRequired[RemainingSteps]
 
 @tool 
-def get_invoices_by_customer_sorted_by_date(customer_id: str) -> list[dict]:
+def get_invoices_by_customer_sorted_by_date(customer_id: Annotated[int, InjectedState("customer_id")]) -> list[dict]:
     """
-    Look up all invoices for a customer using their ID.
+    Look up all invoices for a customer using their ID, the customer ID is in a state variable, so you will not see it in the message history.
     The invoices are sorted in descending order by invoice date, which helps when the customer wants to view their most recent/oldest invoice, or if 
     they want to view invoices within a specific date range.
-    
-    Args:
-        customer_id (str): customer_id, which serves as the identifier.
     
     Returns:
         list[dict]: A list of invoices for the customer.
     """
+    # customer_id = state.get("customer_id", "Unknown user")
     return db.run(f"SELECT * FROM Invoice WHERE CustomerId = {customer_id} ORDER BY InvoiceDate DESC;")
 
 
 @tool 
-def get_invoices_sorted_by_unit_price(customer_id: str) -> list[dict]:
+def get_invoices_sorted_by_unit_price(customer_id: Annotated[int, InjectedState("customer_id")]) -> list[dict]:
     """
     Use this tool when the customer wants to know the details of one of their invoices based on the unit price/cost of the invoice.
     This tool looks up all invoices for a customer, and sorts the unit price from highest to lowest. In order to find the invoice associated with the customer, 
-    we need to know the customer ID.
-    
-    Args:
-        customer_id (str): customer_id, which serves as the identifier.
-    
+    we need to know the customer ID. The customer ID is in a state variable, so you will not see it in the message history.
+
     Returns:
         list[dict]: A list of invoices sorted by unit price.
     """
+    # customer_id = state.get("customer_id", "Unknown user")
     query = f"""
         SELECT Invoice.*, InvoiceLine.UnitPrice
         FROM Invoice
@@ -58,18 +55,17 @@ def get_invoices_sorted_by_unit_price(customer_id: str) -> list[dict]:
 
 
 @tool
-def get_employee_by_invoice_and_customer(invoice_id: str, customer_id: str) -> dict:
+def get_employee_by_invoice_and_customer(invoice_id: int, customer_id: Annotated[int, InjectedState("customer_id")]) -> dict:
     """
     This tool will take in an invoice ID and a customer ID and return the employee information associated with the invoice.
-
+    The customer ID is in a state variable, so you will not see it in the message history.
     Args:
         invoice_id (int): The ID of the specific invoice.
-        customer_id (str): customer_id, which serves as the identifier.
 
     Returns:
         dict: Information about the employee associated with the invoice.
     """
-
+    # customer_id = state.get("customer_id", "Unknown user")
     query = f"""
         SELECT Employee.FirstName, Employee.Title, Employee.Email
         FROM Employee

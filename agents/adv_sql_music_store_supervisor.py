@@ -28,7 +28,7 @@ class InputState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
 
 class State(InputState):
-    customer_id: NotRequired[str]
+    customer_id: NotRequired[id]
     loaded_memory: NotRequired[str]
     remaining_steps: NotRequired[RemainingSteps]
 
