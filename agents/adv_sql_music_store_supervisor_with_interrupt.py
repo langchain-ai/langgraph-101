@@ -1,5 +1,5 @@
 from agents.invoice_agent import graph as invoice_agent
-from agents.music_agent import graph as music_agent
+from agents.adv_sql_agent import graph as music_agent
 from agents.utils import llm, get_engine_for_chinook_db
 
 from langgraph.graph import StateGraph, START, END
@@ -38,7 +38,7 @@ class InputState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
 
 class State(InputState):
-    customer_id: NotRequired[str]
+    customer_id: NotRequired[id]
     loaded_memory: NotRequired[str]
     remaining_steps: NotRequired[RemainingSteps]
 

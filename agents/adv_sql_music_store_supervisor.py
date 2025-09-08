@@ -1,5 +1,5 @@
 from agents.invoice_agent import graph as invoice_agent
-from agents.music_agent import graph as music_agent
+from agents.adv_sql_agent import graph as music_agent
 from agents.utils import llm
 
 from typing import Annotated, NotRequired
@@ -16,7 +16,7 @@ If a question is unrelated to music or invoice, politely remind the customer reg
 
 Your team is composed of two subagents that you can use to help answer the customer's request:
 1. music_catalog_information_subagent: this subagent has access to user's saved music preferences. It can also retrieve information about the digital music store's music 
-catalog (albums, tracks, songs, etc.) from the database. 
+catalog (albums, tracks, songs, etc.) from the database. At most only use this subagent three times, we don't want to make the user wait.
 3. invoice_information_subagent: this subagent is able to retrieve information about a customer's past purchases or invoices 
 from the database. 
 
@@ -28,7 +28,7 @@ class InputState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
 
 class State(InputState):
-    customer_id: NotRequired[str]
+    customer_id: NotRequired[id]
     loaded_memory: NotRequired[str]
     remaining_steps: NotRequired[RemainingSteps]
 
