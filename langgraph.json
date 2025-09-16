@@ -7,11 +7,7 @@
       "Music Catalog Subagent": "./agents/music_agent.py:graph",
       "Invoice Subagent": "./agents/invoice_agent.py:graph",
       "Store Supervisor": "./agents/music_store_supervisor.py:graph",
-      "Store Supervisor with Verification": "./agents/music_store_supervisor_with_interrupt.py:graph",
-      "Basic SQL Agent": "./agents/basic_sql_agent.py:graph",
-      "Advanced SQL Agent": "./agents/adv_sql_agent.py:graph",
-      "Advanced SQL Music Store Supervisor": "./agents/adv_sql_music_store_supervisor.py:graph",
-      "Advanced SQL Music Store Supervisor with Verification": "./agents/adv_sql_music_store_supervisor_with_interrupt.py:graph"
+      "Store Supervisor with Verification": "./agents/music_store_supervisor_with_interrupt.py:graph"
     },
     "env": ".env",
     "python_version": "3.11",
