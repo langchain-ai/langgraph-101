@@ -1,0 +1,25 @@
+[project]
+name = "langgraph-101"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "azure-identity>=1.25.0",
+    "ipython>=9.6.0",
+    "langchain>=1.0.0a9",
+    "langchain-anthropic>=1.0.0a2",
+    "langchain-chroma>=1.0.0a1",
+    "langchain-community>=0.3.30",
+    "langchain-openai>=0.3.34",
+    "langgraph>=0.6.8",
+    "langgraph-cli[inmem]>=0.4.2",
+    "langsmith>=0.4.32",
+    "notebook>=7.4.7",
+    "openai>=2.1.0",
+    "openevals>=0.1.0",
+    "protobuf>=3.20.3",
+    "pyppeteer>=2.0.0",
+    "python-dotenv>=1.1.1",
+    "scikit-learn>=1.7.2",
+]
