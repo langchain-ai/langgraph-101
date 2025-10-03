@@ -1,5 +1,5 @@
 from agents.utils import get_langgraph_docs_retriever, llm
-from langchain.schema import Document
+from langchain_core.documents import Document
 from typing import List
 from typing_extensions import TypedDict
 from langgraph.graph import StateGraph, START, END
