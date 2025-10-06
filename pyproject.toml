@@ -21,5 +21,6 @@ dependencies = [
     "protobuf>=3.20.3",
     "pyppeteer>=2.0.0",
     "python-dotenv>=1.1.1",
+    "requests>=2.32.5",
     "scikit-learn>=1.7.2",
 ]
