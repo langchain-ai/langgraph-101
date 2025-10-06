@@ -20,7 +20,30 @@ To tackle this problem, we’ve built [LangGraph](https://langchain-ai.github.io
 git clone https://github.com/langchain-ai/langgraph-101.git
 ```
 
-Navigate to setup.md and follow instructions there! If you run into issues with setting up the python environment or acquiring the necessary API keys due to any restrictions (ex. corporate policy), contact your LangChain representative and we'll find a work-around!
+
+### Create an environment 
+Ensure you have a recent version of pip and python installed
+```
+$ cd langgraph-101
+# Copy the .env.example file to .env
+cp .env.example .env
+```
+If you run into issues with setting up the python environment or acquiring the necessary API keys due to any restrictions (ex. corporate policy), contact your LangChain representative and we'll find a work-around!
+
+### Package Installation
+Ensure you have a recent version of pip and python installed
+```
+# Install uv if you haven't already
+pip install uv
+
+# Install the package, allowing for pre-release 
+uv sync --prerelease=allow
+
+# Activate the virtual environment
+source .venv/bin/activate
+```
+
+
 
 ### Azure OpenAI Instructions
 
