@@ -1571,6 +1571,7 @@ dependencies = [
     { name = "protobuf" },
     { name = "pyppeteer" },
     { name = "python-dotenv" },
+    { name = "requests" },
     { name = "scikit-learn" },
 ]
 
@@ -1592,6 +1593,7 @@ requires-dist = [
     { name = "protobuf", specifier = ">=3.20.3" },
     { name = "pyppeteer", specifier = ">=2.0.0" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
+    { name = "requests", specifier = ">=2.32.5" },
     { name = "scikit-learn", specifier = ">=1.7.2" },
 ]
 
