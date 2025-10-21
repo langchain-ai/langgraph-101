@@ -354,4 +354,4 @@ overall_workflow = (
     .add_node("response_agent", agent)
     .add_edge(START, "triage_router")
 )
-email_assistant = overall_workflow.compile()
+graph = overall_workflow.compile()

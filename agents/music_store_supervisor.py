@@ -3,8 +3,7 @@ from agents.music_agent import graph as music_agent
 from agents.utils import llm
 
 from langchain.agents import create_agent
-from langchain.tools import tool
-from langchain.tools import InjectedState
+from langchain.tools import tool, ToolRuntime
 from typing_extensions import TypedDict
 from typing import Annotated
 from langgraph.graph.message import AnyMessage, add_messages
@@ -37,12 +36,12 @@ Based on the existing steps that have been taken in the messages, your role is t
         An agent that can assistant with all invoice-related queries. It can retrieve information about a customers past purchases or invoices.
         """
 )
-def call_invoice_information_subagent(query: str, customer_id: Annotated[int, InjectedState("customer_id")]):
+def call_invoice_information_subagent(runtime: ToolRuntime, query: str):
     print('made it here')
     print(f"invoice subagent input: {query}")
     result = invoice_agent.invoke({
         "messages": [{"role": "user", "content": query}],
-        "customer_id": customer_id
+        "customer_id": runtime.state.get("customer_id", {})
     })
     subagent_response = result["messages"][-1].content
     return subagent_response
@@ -54,9 +53,10 @@ def call_invoice_information_subagent(query: str, customer_id: Annotated[int, In
         catalog (albums, tracks, songs, etc.) from the database. 
         """
 )
-def call_music_catalog_subagent(query: str):
+def call_music_catalog_subagent(runtime: ToolRuntime, query: str):
     result = music_agent.invoke({
-        "messages": [{"role": "user", "content": query}]
+        "messages": [{"role": "user", "content": query}],
+        "customer_id": runtime.state.get("customer_id", {})
     })
     subagent_response = result["messages"][-1].content
     return subagent_response
@@ -65,6 +65,6 @@ supervisor = create_agent(
     model="anthropic:claude-3-7-sonnet-latest", 
     tools=[call_invoice_information_subagent, call_music_catalog_subagent], 
     name="supervisor",
-    prompt=supervisor_prompt, 
+    system_prompt=supervisor_prompt, 
     state_schema=State, 
 )

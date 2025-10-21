@@ -4,12 +4,11 @@ from typing_extensions import TypedDict
 from typing import Annotated, NotRequired
 from langgraph.graph.message import AnyMessage, add_messages
 from langgraph.managed.is_last_step import RemainingSteps
-from langgraph.prebuilt import InjectedState
+from langchain.agents import create_agent
+from langchain.tools import tool, ToolRuntime
 
 engine = get_engine_for_chinook_db()
 db = SQLDatabase(engine)
-
-from langchain_core.tools import tool
 
 class InputState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
@@ -17,10 +16,9 @@ class InputState(TypedDict):
 class State(InputState):
     customer_id: NotRequired[int]
     loaded_memory: NotRequired[str]
-    remaining_steps: NotRequired[RemainingSteps]
 
 @tool 
-def get_invoices_by_customer_sorted_by_date(customer_id: Annotated[int, InjectedState("customer_id")]) -> list[dict]:
+def get_invoices_by_customer_sorted_by_date(runtime: ToolRuntime) -> list[dict]:
     """
     Look up all invoices for a customer using their ID, the customer ID is in a state variable, so you will not see it in the message history.
     The invoices are sorted in descending order by invoice date, which helps when the customer wants to view their most recent/oldest invoice, or if 
@@ -30,11 +28,12 @@ def get_invoices_by_customer_sorted_by_date(customer_id: Annotated[int, Injected
         list[dict]: A list of invoices for the customer.
     """
     # customer_id = state.get("customer_id", "Unknown user")
+    customer_id = runtime.state.get("customer_id", {})
     return db.run(f"SELECT * FROM Invoice WHERE CustomerId = {customer_id} ORDER BY InvoiceDate DESC;")
 
 
 @tool 
-def get_invoices_sorted_by_unit_price(customer_id: Annotated[int, InjectedState("customer_id")]) -> list[dict]:
+def get_invoices_sorted_by_unit_price(runtime: ToolRuntime) -> list[dict]:
     """
     Use this tool when the customer wants to know the details of one of their invoices based on the unit price/cost of the invoice.
     This tool looks up all invoices for a customer, and sorts the unit price from highest to lowest. In order to find the invoice associated with the customer, 
@@ -51,11 +50,12 @@ def get_invoices_sorted_by_unit_price(customer_id: Annotated[int, InjectedState(
         WHERE Invoice.CustomerId = {customer_id}
         ORDER BY InvoiceLine.UnitPrice DESC;
     """
+    customer_id = runtime.state.get("customer_id", {})
     return db.run(query)
 
 
 @tool
-def get_employee_by_invoice_and_customer(invoice_id: int, customer_id: Annotated[int, InjectedState("customer_id")]) -> dict:
+def get_employee_by_invoice_and_customer(runtime: ToolRuntime, invoice_id: int) -> dict:
     """
     This tool will take in an invoice ID and a customer ID and return the employee information associated with the invoice.
     The customer ID is in a state variable, so you will not see it in the message history.
@@ -66,6 +66,7 @@ def get_employee_by_invoice_and_customer(invoice_id: int, customer_id: Annotated
         dict: Information about the employee associated with the invoice.
     """
     # customer_id = state.get("customer_id", "Unknown user")
+    customer_id = runtime.state.get("customer_id", {})
     query = f"""
         SELECT Employee.FirstName, Employee.Title, Employee.Email
         FROM Employee
@@ -100,7 +101,5 @@ invoice_subagent_prompt = """
     You may have additional context that you should use to help answer the customer's query. It will be provided to you below:
     """
 
-from langgraph.prebuilt import create_react_agent
-
 # Define the subagent 
-graph = create_react_agent(llm, tools=invoice_tools, name="invoice_information_subagent",prompt=invoice_subagent_prompt, state_schema=State)
+graph = create_agent(llm, tools=invoice_tools, name="invoice_information_subagent", system_prompt=invoice_subagent_prompt, state_schema=State)

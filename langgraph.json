@@ -1,9 +1,8 @@
 {
     "dockerfile_lines": [],
     "graphs": {
-      "Simple RAG": "./agents/simple_rag.py:graph",
-      "Corrective RAG": "./agents/corrective_rag.py:graph",
-      "RAG with Memory and HIL": "./agents/memory_hil_rag.py:graph",
+      "Email Agent": "./agents/email_agent.py:graph",
+      "LG101 Weather Agent": "./agents/lg101-weather-agent.py:agent",
       "Music Catalog Subagent": "./agents/music_agent.py:graph",
       "Invoice Subagent": "./agents/invoice_agent.py:graph",
       "Store Supervisor": "./agents/music_store_supervisor.py:supervisor",
