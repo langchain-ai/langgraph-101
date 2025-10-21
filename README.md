@@ -54,7 +54,7 @@ Ensure you have a recent version of pip and python installed
 pip install uv
 
 # Install the package, allowing for pre-release 
-uv sync --prerelease=allow
+uv sync
 
 # Activate the virtual environment
 source .venv/bin/activate
