@@ -28,7 +28,7 @@ At LangChain, we aim to make it easy to build LLM applications. One type of LLM 
 
 In practice though, it is incredibly difficult to build systems that reliably execute on these tasks. As we've worked with our users to put agents into production, we've learned that more control is often necessary. You might need an agent to always call a specific tool first or use different prompts based on its state.
 
-To tackle this problem, we've built [LangGraph](https://langchain-ai.github.io/langgraph/) — a framework for building agent and multi-agent applications. Separate from the LangChain package, LangGraph's core design philosophy is to help developers add better precision and control into agent workflows, suitable for the complexity of real-world systems.
+To tackle this problem, we've built [LangGraph](https://docs.langchain.com/oss/python/langgraph/overview) — a framework for building agent and multi-agent applications. Separate from the LangChain package, LangGraph's core design philosophy is to help developers add better precision and control into agent workflows, suitable for the complexity of real-world systems.
 
 ## Pre-work
 
@@ -78,7 +78,7 @@ langgraph dev
 
 The `langgraph.json` configuration file defines which agents are available. You can interact with agents via the API or through LangGraph Studio's visual interface.
 
-For more details, see the [LangGraph CLI documentation](https://langchain-ai.github.io/langgraph/cloud/reference/cli/).
+For more details, see the [LangGraph CLI documentation](https://docs.langchain.com/langsmith/cli#langgraph-cli).
 
 ### Azure OpenAI Instructions
 
@@ -115,7 +115,7 @@ If you are using AzureOpenAI instead of OpenAI, there are a few things you need 
 
 ### Resources
 
-- **[LangChain Documentation](https://python.langchain.com/docs/introduction/)** - Complete LangChain reference
-- **[LangGraph Documentation](https://langchain-ai.github.io/langgraph/)** - LangGraph guides and API reference  
+- **[LangChain Documentation](https://docs.langchain.com/oss/python/langchain/overview)** - Complete LangChain reference
+- **[LangGraph Documentation](https://docs.langchain.com/oss/python/langgraph/overview)** - LangGraph guides and API reference  
 - **[LangChain Academy](https://academy.langchain.com/)** - Free courses with video tutorials
 - **[LangSmith](https://smith.langchain.com)** - Debugging and monitoring for LLM applications
