@@ -1,9 +1,14 @@
 from agents.utils import llm, get_engine_for_chinook_db
 from langchain_community.utilities.sql_database import SQLDatabase
 from typing_extensions import TypedDict
-from typing import Annotated, Optional, NotRequired
+from typing import Annotated, NotRequired
 from langgraph.graph.message import AnyMessage, add_messages
 from langgraph.managed.is_last_step import RemainingSteps
+from langgraph.prebuilt import ToolNode
+from langchain_core.messages import SystemMessage
+from langgraph.graph import StateGraph, START, END
+from langchain.tools import tool
+import ast
 
 engine = get_engine_for_chinook_db()
 db = SQLDatabase(engine)
@@ -17,8 +22,6 @@ class State(InputState):
     remaining_steps: NotRequired[RemainingSteps]
 
 
-from langchain_core.tools import tool
-import ast
 
 @tool
 def get_albums_by_artist(artist: str):
@@ -96,15 +99,12 @@ def check_for_songs(song_title):
 music_tools = [get_albums_by_artist, get_tracks_by_artist, get_songs_by_genre, check_for_songs]
 llm_with_music_tools = llm.bind_tools(music_tools)
 
-from langgraph.prebuilt import ToolNode
+
 # Node
 music_tool_node = ToolNode(music_tools)
 
-from langchain_core.messages import ToolMessage, SystemMessage, HumanMessage
-from langchain_core.runnables import RunnableConfig
-
 # Node 
-def music_assistant(state: State, config: RunnableConfig): 
+def music_assistant(state: State): 
 
     # Fetching long term memory. 
     memory = "None" 
@@ -152,7 +152,7 @@ def music_assistant(state: State, config: RunnableConfig):
     return {"messages": [response]}
 
 # Conditional edge that determines whether to continue or not
-def should_continue(state: State, config: RunnableConfig):
+def should_continue(state: State):
     messages = state["messages"]
     last_message = messages[-1]
     
@@ -162,11 +162,8 @@ def should_continue(state: State, config: RunnableConfig):
     # Otherwise if there is, we continue
     else:
         return "continue"
-    
 
-from langgraph.graph import StateGraph, START, END
-
-music_workflow = StateGraph(State)
+music_workflow = StateGraph(State, input_schema = InputState)
 
 # Add nodes 
 music_workflow.add_node("music_assistant", music_assistant)
