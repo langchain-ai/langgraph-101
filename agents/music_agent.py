@@ -5,7 +5,7 @@ from typing import Annotated, NotRequired
 from langgraph.graph.message import AnyMessage, add_messages
 from langgraph.managed.is_last_step import RemainingSteps
 from langgraph.prebuilt import ToolNode
-from langchain_core.messages import SystemMessage
+from langchain.messages import SystemMessage
 from langgraph.graph import StateGraph, START, END
 from langchain.tools import tool
 import ast

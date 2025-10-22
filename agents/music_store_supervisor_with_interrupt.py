@@ -8,7 +8,7 @@ from typing import Annotated, Optional, NotRequired
 from langgraph.graph.message import AnyMessage, add_messages
 from langgraph.managed.is_last_step import RemainingSteps
 from typing_extensions import TypedDict
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+from langchain.messages import SystemMessage, HumanMessage, AIMessage
 from langchain_core.runnables import RunnableConfig
 import ast
 from langchain_community.utilities.sql_database import SQLDatabase
