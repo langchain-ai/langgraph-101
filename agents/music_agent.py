@@ -15,10 +15,10 @@ db = SQLDatabase(engine)
 
 class InputState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
+    loaded_memory: NotRequired[str]
 
 class State(InputState):
     customer_id: NotRequired[str]
-    loaded_memory: NotRequired[str]
     remaining_steps: NotRequired[RemainingSteps]
 
 
