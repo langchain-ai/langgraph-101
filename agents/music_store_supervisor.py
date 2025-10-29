@@ -7,6 +7,7 @@ from langchain.tools import tool, ToolRuntime
 from typing_extensions import TypedDict
 from typing import Annotated
 from langgraph.graph.message import AnyMessage, add_messages
+from langchain.messages import HumanMessage
 
 class InputState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
@@ -43,7 +44,7 @@ def call_invoice_information_subagent(runtime: ToolRuntime, query: str):
     print('made it here')
     print(f"invoice subagent input: {query}")
     result = invoice_agent.invoke({
-        "messages": [{"role": "user", "content": query}],
+        "messages": [HumanMessage(content=query)],
         "customer_id": runtime.state.get("customer_id", {})
     })
     subagent_response = result["messages"][-1].content
@@ -58,7 +59,7 @@ def call_invoice_information_subagent(runtime: ToolRuntime, query: str):
 )
 def call_music_catalog_subagent(runtime: ToolRuntime, query: str):
     result = music_agent.invoke({
-        "messages": [{"role": "user", "content": query}],
+        "messages": [HumanMessage(content=query)],
         "loaded_memory": runtime.state.get("loaded_memory", {})
     })
     subagent_response = result["messages"][-1].content
