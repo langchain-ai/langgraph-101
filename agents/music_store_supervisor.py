@@ -7,6 +7,7 @@ from langchain.tools import tool, ToolRuntime
 from typing_extensions import TypedDict
 from typing import Annotated
 from langgraph.graph.message import AnyMessage, add_messages
+from langchain.messages import HumanMessage
 
 class InputState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
@@ -16,6 +17,8 @@ class State(InputState):
     loaded_memory: str
     remaining_steps: int
 
+
+
 supervisor_prompt = """You are an expert customer support assistant for a digital music store. You can handle music catalog or invoice related question regarding past purchases, song or album availabilities. 
 You are dedicated to providing exceptional service and ensuring customer queries are answered thoroughly, and have a team of subagents that you can use to help answer queries from customers. 
 Your primary role is to serve as a supervisor/planner for this multi-agent team that helps answer queries from customers. Always respond to the customer through summarizing the conversation, including individual responses from subagents. 
@@ -23,7 +26,8 @@ If a question is unrelated to music or invoice, politely remind the customer reg
 
 Your team is composed of two subagents that you can use to help answer the customer's request:
 1. music_catalog_information_subagent: this subagent has access to user's saved music preferences. It can also retrieve information about the digital music store's music 
-catalog (albums, tracks, songs, etc.) from the database. 
+catalog (albums, tracks, songs, etc.) from the database. This subagent has access to the user's memory profile, and music preferences! It will automatically be able to infer user's music preferences from the memory profile. 
+no need to pass customer identifier to this subagent.
 2. invoice_information_subagent: this subagent is able to retrieve information about a customer's past purchases or invoices 
 from the database. 
 
@@ -40,7 +44,7 @@ def call_invoice_information_subagent(runtime: ToolRuntime, query: str):
     print('made it here')
     print(f"invoice subagent input: {query}")
     result = invoice_agent.invoke({
-        "messages": [{"role": "user", "content": query}],
+        "messages": [HumanMessage(content=query)],
         "customer_id": runtime.state.get("customer_id", {})
     })
     subagent_response = result["messages"][-1].content
@@ -55,8 +59,8 @@ def call_invoice_information_subagent(runtime: ToolRuntime, query: str):
 )
 def call_music_catalog_subagent(runtime: ToolRuntime, query: str):
     result = music_agent.invoke({
-        "messages": [{"role": "user", "content": query}],
-        "customer_id": runtime.state.get("customer_id", {})
+        "messages": [HumanMessage(content=query)],
+        "loaded_memory": runtime.state.get("loaded_memory", {})
     })
     subagent_response = result["messages"][-1].content
     return subagent_response
