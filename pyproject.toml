@@ -3,7 +3,7 @@ name = "langgraph-101"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = [
     "azure-identity>=1.25.1",
     "ipython>=9.6.0",
