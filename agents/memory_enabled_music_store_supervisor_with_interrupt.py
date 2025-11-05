@@ -124,15 +124,22 @@ def format_user_memory(user_data):
     """Formats music preferences from users, if available."""
     profile = user_data['memory']
     result = ""
-    if hasattr(profile, 'music_preferences') and profile.music_preferences:
-        result += f"Music Preferences: {', '.join(profile.music_preferences)}"
+    
+    # Handle both Pydantic model (attributes) and dict (keys) representations
+    if isinstance(profile, dict):
+        music_prefs = profile.get('music_preferences', [])
+    else:
+        music_prefs = getattr(profile, 'music_preferences', [])
+    
+    if music_prefs:
+        result += f"Music Preferences: {', '.join(music_prefs)}"
     return result.strip()
 
 # Node
 def load_memory(state: State, store: BaseStore):
     """Loads music preferences from users, if available."""
     
-    user_id = state["customer_id"]
+    user_id = str(state["customer_id"])  # Convert to string to match create_memory
     namespace = ("memory_profile", user_id)
     existing_memory = store.get(namespace, "user_memory")
     formatted_memory = ""
@@ -194,7 +201,8 @@ def create_memory(state: State, store: BaseStore):
     formatted_system_message = SystemMessage(content=create_memory_prompt.format(conversation=state["messages"], memory_profile=formatted_memory))
     updated_memory = llm.with_structured_output(UserProfile).invoke([formatted_system_message])
     key = "user_memory"
-    store.put(namespace, key, {"memory": updated_memory})
+    # Convert Pydantic model to dict to avoid pickle issues during hot-reload
+    store.put(namespace, key, {"memory": updated_memory.model_dump()})
 
 
 multi_agent_final = StateGraph(State, input_schema = InputState) 

@@ -1,11 +1,36 @@
 from langchain_core.tools import tool
 from langchain.agents import create_agent
+import requests
+import json
 
 @tool
-def get_weather(city: str) -> str:
-    """Get the current weather for a given city."""
-    # In a real app, this would call a weather API
-    return f"It's 72°F and sunny in {city}!"
+def get_weather(latitude: float, longitude: float) -> str:
+    """Get current temperature in Fahrenheit and weather code for given coordinates.
+
+    Args:
+        latitude: Latitude coordinate
+        longitude: Longitude coordinate
+
+    Returns:
+        JSON string with temperature_fahrenheit and weather_code (do not include the code in your response, translate it to plain English)
+    """
+    url = "https://api.open-meteo.com/v1/forecast"
+    params = {
+        "latitude": latitude,
+        "longitude": longitude,
+        "current": "temperature_2m,weather_code",
+        "temperature_unit": "fahrenheit"
+    }
+
+    weather = requests.get(url, params=params).json()["current"]
+    temperature = weather["temperature_2m"]
+    weather_code = weather["weather_code"]
+    result = {
+        "temperature_fahrenheit": temperature,
+        "weather_code": weather_code
+    }
+
+    return json.dumps(result)
 
 @tool
 def get_user_preferences(user_id: str) -> str:
