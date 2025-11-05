@@ -10,7 +10,6 @@
       "Memory Store Supervisor with Verification": "./agents/memory_enabled_music_store_supervisor_with_interrupt.py:agent"
     },
     "env": ".env",
-    "python_version": "3.11",
     "dependencies": [
       "."
     ]
