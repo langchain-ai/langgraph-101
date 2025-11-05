@@ -24,3 +24,6 @@ dependencies = [
     "requests>=2.32.5",
     "scikit-learn>=1.7.2",
 ]
+
+[tool.setuptools]
+packages = ["agents"]
