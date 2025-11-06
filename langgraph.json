@@ -1,13 +1,13 @@
 {
     "dockerfile_lines": [],
     "graphs": {
-      "Email Agent": "./agents/email_agent.py:graph",
       "LG101 Weather Agent": "./agents/lg101-weather-agent.py:agent",
       "Music Catalog Subagent": "./agents/music_agent.py:graph",
       "Invoice Subagent": "./agents/invoice_agent.py:graph",
       "Store Supervisor": "./agents/music_store_supervisor.py:supervisor",
       "Store Supervisor with Verification": "./agents/music_store_supervisor_with_interrupt.py:graph",
-      "Memory Store Supervisor with Verification": "./agents/memory_enabled_music_store_supervisor_with_interrupt.py:agent"
+      "Memory Store Supervisor with Verification": "./agents/memory_enabled_music_store_supervisor_with_interrupt.py:agent",
+      "Email Agent": "./agents/email_agent.py:graph"
     },
     "env": ".env",
     "dependencies": [
