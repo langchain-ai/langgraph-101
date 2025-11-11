@@ -1,5 +1,5 @@
-from langchain_openai import OpenAIEmbeddings, AzureOpenAIEmbeddings, AzureChatOpenAI
-from langchain_anthropic import ChatAnthropic
+from langchain_openai import AzureChatOpenAI
+# from langchain_anthropic import ChatAnthropic
 # from langchain_google_vertexai import ChatVertexAI
 from azure.identity import InteractiveBrowserCredential
 
@@ -10,26 +10,6 @@ def get_token():
     return token.token
 
 # For AzureOpenAI, make sure you set AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT
-
-
-"""
-Embedding Models
-"""
-
-OPENAI_EMBEDDING_MODEL = OpenAIEmbeddings()
-
-# Azure OpenAI: Using Environment Variables
-# AZURE_OPENAI_EMBEDDING_MODEL = AzureOpenAIEmbeddings(
-#     model="text-embedding-3-large",
-# )
-
-# Azure OpenAI: Using Azure AD
-# AZURE_OPENAI_EMBEDDING_MODEL = AzureOpenAIEmbeddings(
-#     openai_api_version="2024-03-01-preview",
-#     azure_endpoint="https://deployment.openai.azure.com/",
-#     model="text-embedding-3-large",
-#     azure_ad_token_provider=get_token
-# )
 
 
 """
@@ -49,14 +29,14 @@ Chat Models
 #     azure_ad_token_provider=get_token
 # )
 
-# Anthropic Sonnet 3.5 
-# ANTHROPIC_SONNET_3_5 = ChatAnthropic(
-#     model="claude-3-5-sonnet-20240620",
-#     streaming=True
-# )
+# Anthropic Haiku 4.5
+#ANTHROPIC_HAIKU_4_5 = ChatAnthropic(
+#    model="claude-haiku-4-5",
+#    streaming=True
+#)
 
-# Vertex AI Gemini 1.5 Flash
-# VERTEX_AI_GEMINI_1_5_FLASH = ChatVertexAI(
-#     model="gemini-1.5-flash-002",
+# Vertex AI Gemini 2.5 Flash
+# VERTEX_AI_GEMINI_2_5_FLASH = ChatVertexAI(
+#     model="gemini-2.5-flash",
 #     streaming=True
 # )
