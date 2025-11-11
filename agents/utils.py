@@ -1,13 +1,11 @@
-from langchain_openai import ChatOpenAI
+from langchain.chat_models import init_chat_model
 import sqlite3
 import requests
 from sqlalchemy import create_engine
 from sqlalchemy.pool import StaticPool
 
 # NOTE: Configure the LLM that you want to use
-llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
-# llm = ChatAnthropic(model_name="claude-3-5-sonnet-20240620", temperature=0)
-# llm = ChatVertexAI(model_name="gemini-1.5-flash-002", temperature=0)
+llm = init_chat_model("openai:gpt-4o")
 
 def get_engine_for_chinook_db():
     """Pull sql file, populate in-memory database, and create engine."""
