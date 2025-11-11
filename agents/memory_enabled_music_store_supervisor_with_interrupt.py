@@ -199,9 +199,11 @@ def create_memory(state: State, store: BaseStore):
     namespace = ("memory_profile", user_id)
     formatted_memory = state["loaded_memory"]
     formatted_system_message = SystemMessage(content=create_memory_prompt.format(conversation=state["messages"], memory_profile=formatted_memory))
-    updated_memory = llm.with_structured_output(UserProfile).invoke([formatted_system_message])
+    # Anthropic requires at least one user message along with the system message
+    user_prompt = HumanMessage(content="Please analyze the conversation and update the customer's memory profile according to the instructions.")
+    updated_memory = llm.with_structured_output(UserProfile).invoke([formatted_system_message, user_prompt])
     key = "user_memory"
-    # Convert Pydantic model to dict to avoid pickle issues during hot-reload
+    # Convert Pydantic model to dict to avoid pickle serialization issues on restart
     store.put(namespace, key, {"memory": updated_memory.model_dump()})
 
 
