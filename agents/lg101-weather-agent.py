@@ -53,7 +53,7 @@ def book_recommendation(genre: str, user_preferences: str = "") -> str:
 
 # Create a helpful assistant agent
 agent = create_agent(
-    model="openai:gpt-4o-mini",
+    model="openai:gpt-5-nano",
     tools=[get_weather, get_user_preferences, book_recommendation],
     system_prompt="""You are a helpful personal assistant. 
     
