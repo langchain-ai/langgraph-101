@@ -3,6 +3,8 @@ from langchain.agents import create_agent
 import requests
 import json
 
+from agents.utils import model
+
 @tool
 def get_weather(latitude: float, longitude: float) -> str:
     """Get current temperature in Fahrenheit and weather code for given coordinates.
@@ -53,7 +55,7 @@ def book_recommendation(genre: str, user_preferences: str = "") -> str:
 
 # Create a helpful assistant agent
 agent = create_agent(
-    model="openai:gpt-5-nano",
+    model=model,
     tools=[get_weather, get_user_preferences, book_recommendation],
     system_prompt="""You are a helpful personal assistant. 
     

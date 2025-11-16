@@ -97,6 +97,37 @@ If you are using AzureOpenAI instead of OpenAI, there are a few things you need 
 
 4. In the notebooks, use AzureOpenAI (code already provided in cells) where applicable, instead of OpenAI (default)
 
+### Google Vertex AI Instructions
+
+If you are using Google Vertex AI instead of OpenAI, follow these steps:
+
+1. **Set up your Google Cloud credentials**
+   - Create a service account in your Google Cloud project with Vertex AI permissions
+   - Download the service account JSON key file
+   - Save it as `vertexCred.json` in the project root directory
+
+2. **Configure environment variables in your .env file**
+   - Set `GOOGLE_APPLICATION_CREDENTIALS=./vertexCred.json`
+   - See `.env.example` for reference
+
+3. **Update agent code** - Navigate to `agents/utils.py` and:
+   - Comment out: `llm = init_chat_model("openai:gpt-4o")`
+   - Uncomment the Vertex AI code:
+     ```python
+     from langchain_google_vertexai import ChatVertexAI
+     
+     llm = ChatVertexAI(
+         model="gemini-2.5-flash"
+     )
+     ```
+
+4. **In notebooks**, the Vertex AI setup code is already provided in the first cells:
+   - Look for the "Google Vertex AI version" section
+   - Uncomment and use that code instead of the OpenAI setup
+   - The setup automatically handles credential paths from any notebook location
+
+**Note:** Make sure `vertexCred.json` is added to your `.gitignore` to avoid committing credentials.
+
 ## Getting Started
 
 ### Recommended Learning Path

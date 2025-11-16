@@ -1,5 +1,5 @@
 from agents.music_store_supervisor import supervisor
-from agents.utils import llm, get_engine_for_chinook_db
+from agents.utils import model, get_engine_for_chinook_db
 
 from langgraph.graph import StateGraph, START, END
 from typing import Annotated, Optional, NotRequired
@@ -30,7 +30,7 @@ class UserInput(BaseModel):
     identifier: str = Field(description = "Identifier, which can be a customer ID, email, or phone number.")
 
 
-structured_llm = llm.with_structured_output(schema=UserInput)
+structured_llm = model.with_structured_output(schema=UserInput)
 structured_system_prompt = """You are a customer service representative responsible for extracting customer identifier.\n 
 Only extract the customer's account information from the message history. 
 If they haven't provided the information yet, return an empty string for the file"""
@@ -98,7 +98,7 @@ def verify_info(state: State):
                   "messages" : [intent_message]
                   }
         else:
-          response = llm.invoke([SystemMessage(content=system_instructions)]+state['messages'])
+          response = model.invoke([SystemMessage(content=system_instructions)]+state['messages'])
           return {"messages": [response]}
 
     else: 
@@ -201,7 +201,7 @@ def create_memory(state: State, store: BaseStore):
     formatted_system_message = SystemMessage(content=create_memory_prompt.format(conversation=state["messages"], memory_profile=formatted_memory))
     # Anthropic requires at least one user message along with the system message
     user_prompt = HumanMessage(content="Please analyze the conversation and update the customer's memory profile according to the instructions.")
-    updated_memory = llm.with_structured_output(UserProfile).invoke([formatted_system_message, user_prompt])
+    updated_memory = model.with_structured_output(UserProfile).invoke([formatted_system_message, user_prompt])
     key = "user_memory"
     # Convert Pydantic model to dict to avoid pickle serialization issues on restart
     store.put(namespace, key, {"memory": updated_memory.model_dump()})

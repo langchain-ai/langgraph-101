@@ -1,7 +1,7 @@
 from agents.invoice_agent import graph as invoice_agent
 from agents.music_agent import graph as music_agent
 from agents.music_store_supervisor import supervisor
-from agents.utils import llm, get_engine_for_chinook_db
+from agents.utils import model, get_engine_for_chinook_db
 
 from langgraph.graph import StateGraph, START, END
 from typing import Annotated, Optional, NotRequired
@@ -9,7 +9,6 @@ from langgraph.graph.message import AnyMessage, add_messages
 from langgraph.managed.is_last_step import RemainingSteps
 from typing_extensions import TypedDict
 from langchain.messages import SystemMessage, HumanMessage, AIMessage
-from langchain_core.runnables import RunnableConfig
 import ast
 from langchain_community.utilities.sql_database import SQLDatabase
 
@@ -31,7 +30,7 @@ class UserInput(BaseModel):
     identifier: str = Field(description = "Identifier, which can be a customer ID, email, or phone number.")
 
 
-structured_llm = llm.with_structured_output(schema=UserInput)
+structured_llm = model.with_structured_output(schema=UserInput)
 structured_system_prompt = """You are a customer service representative responsible for extracting customer identifier.\n 
 Only extract the customer's account information from the message history. 
 If they haven't provided the information yet, return an empty string for the file"""
@@ -67,7 +66,7 @@ def get_customer_id_from_identifier(identifier: str) -> Optional[int]:
 
 # Node
 
-def verify_info(state: State, config: RunnableConfig):
+def verify_info(state: State):
     """Verify the customer's account by parsing their input and matching it with the database."""
 
     if state.get("customer_id") is None: 
@@ -100,7 +99,7 @@ def verify_info(state: State, config: RunnableConfig):
                   "messages" : [intent_message]
                   }
         else:
-          response = llm.invoke([SystemMessage(content=system_instructions)]+state['messages'])
+          response = model.invoke([SystemMessage(content=system_instructions)]+state['messages'])
           return {"messages": [response]}
 
     else: 
@@ -108,14 +107,14 @@ def verify_info(state: State, config: RunnableConfig):
 
 from langgraph.types import interrupt
 # Node
-def human_input(state: State, config: RunnableConfig):
+def human_input(state: State):
     """ No-op node that should be interrupted on """
     user_input = interrupt("Please provide input.")
     return {"messages": [HumanMessage(content=user_input)]}
 
 
 # conditional_edge
-def should_interrupt(state: State, config: RunnableConfig):
+def should_interrupt(state: State):
     if state.get("customer_id") is not None:
         return "continue"
     else:
