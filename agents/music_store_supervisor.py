@@ -1,6 +1,6 @@
 from agents.invoice_agent import graph as invoice_agent
 from agents.music_agent import graph as music_agent
-from agents.utils import llm
+from utils.models import model
 
 from langchain.agents import create_agent
 from langchain.tools import tool, ToolRuntime
@@ -66,7 +66,7 @@ def call_music_catalog_subagent(runtime: ToolRuntime, query: str):
     return subagent_response
 
 supervisor = create_agent(
-    model="anthropic:claude-3-7-sonnet-latest", 
+    model=model,
     tools=[call_invoice_information_subagent, call_music_catalog_subagent], 
     name="supervisor",
     system_prompt=supervisor_prompt, 

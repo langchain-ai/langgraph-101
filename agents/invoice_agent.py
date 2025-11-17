@@ -1,9 +1,9 @@
-from agents.utils import llm, get_engine_for_chinook_db
+from utils.models import model
+from utils.utils import get_engine_for_chinook_db
 from langchain_community.utilities.sql_database import SQLDatabase
 from typing_extensions import TypedDict
 from typing import Annotated, NotRequired
 from langgraph.graph.message import AnyMessage, add_messages
-from langgraph.managed.is_last_step import RemainingSteps
 from langchain.agents import create_agent
 from langchain.tools import tool, ToolRuntime
 
@@ -102,4 +102,4 @@ invoice_subagent_prompt = """
     """
 
 # Define the subagent 
-graph = create_agent(llm, tools=invoice_tools, name="invoice_information_subagent", system_prompt=invoice_subagent_prompt, state_schema=State)
+graph = create_agent(model, tools=invoice_tools, name="invoice_information_subagent", system_prompt=invoice_subagent_prompt, state_schema=State)
