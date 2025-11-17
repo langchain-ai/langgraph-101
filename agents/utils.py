@@ -22,8 +22,8 @@ def get_engine_for_chinook_db():
 # NOTE: Configure the LLM that you want to use
 from langchain.chat_models import init_chat_model
 
-# model = init_chat_model("openai:o3-mini")
-model = init_chat_model("anthropic:claude-haiku-4-5")
+model = init_chat_model("openai:o3-mini")
+# model = init_chat_model("anthropic:claude-haiku-4-5")
 
 # Note: If you are using another `ChatModel`, you can define it in `models.py` and import it here
 # from models import AZURE_OPENAI_GPT_4O
@@ -31,7 +31,7 @@ model = init_chat_model("anthropic:claude-haiku-4-5")
 
 
 
-"""Bedrock Version"""
+# Bedrock Version
 # from dotenv import load_dotenv
 # from langchain_aws import ChatBedrockConverse
 # import os
@@ -52,7 +52,7 @@ model = init_chat_model("anthropic:claude-haiku-4-5")
 # )
 
 
-"""Google Vertex AI version"""
+# Google Vertex AI version
 # Make sure you have your vertex ai credentials setup and your GOOGLE_APPLICATION_CREDENTIALS are pointing to the JSON file. 
 
 # import os
