@@ -112,14 +112,7 @@ If you are using Google Vertex AI instead of OpenAI, follow these steps:
 
 3. **Update agent code** - Navigate to `agents/utils.py` and:
    - Comment out: `llm = init_chat_model("openai:gpt-4o")`
-   - Uncomment the Vertex AI code:
-     ```python
-     from langchain_google_vertexai import ChatVertexAI
-     
-     llm = ChatVertexAI(
-         model="gemini-2.5-flash"
-     )
-     ```
+   - Uncomment the Vertex AI code
 
 4. **In notebooks**, the Vertex AI setup code is already provided in the first cells:
    - Look for the "Google Vertex AI version" section
