@@ -1,6 +1,6 @@
 from agents.invoice_agent import graph as invoice_agent
 from agents.music_agent import graph as music_agent
-from agents.utils import model
+from utils.models import model
 
 from langchain.agents import create_agent
 from langchain.tools import tool, ToolRuntime

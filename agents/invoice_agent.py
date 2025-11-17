@@ -1,4 +1,5 @@
-from agents.utils import model, get_engine_for_chinook_db
+from utils.models import model
+from utils.utils import get_engine_for_chinook_db
 from langchain_community.utilities.sql_database import SQLDatabase
 from typing_extensions import TypedDict
 from typing import Annotated, NotRequired

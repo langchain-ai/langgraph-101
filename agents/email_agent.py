@@ -7,7 +7,7 @@ from langchain_core.tools import tool
 from langgraph.graph import StateGraph, START, END, MessagesState
 from langgraph.types import Command
 from dotenv import load_dotenv
-from agents.utils import model
+from utils.models import model
 
 load_dotenv("../.env")
 

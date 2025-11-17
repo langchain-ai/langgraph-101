@@ -3,7 +3,7 @@ from langchain.agents import create_agent
 import requests
 import json
 
-from agents.utils import model
+from utils.models import model
 
 @tool
 def get_weather(latitude: float, longitude: float) -> str:

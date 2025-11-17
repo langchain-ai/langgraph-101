@@ -25,4 +25,4 @@ dependencies = [
 ]
 
 [tool.setuptools]
-packages = ["agents"]
+packages = ["agents", "utils"]
