@@ -16,6 +16,7 @@ dependencies = [
     "langgraph>=1.0.1",
     "langgraph-cli[inmem]>=0.4.4",
     "langsmith>=0.4.37",
+    "nbdime>=4.0.2",
     "notebook>=7.4.7",
     "openai>=2.6.0",
     "openevals>=0.1.0",

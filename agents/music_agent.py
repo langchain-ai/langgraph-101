@@ -1,4 +1,5 @@
-from agents.utils import llm, get_engine_for_chinook_db
+from utils.models import model
+from utils.utils import get_engine_for_chinook_db
 from langchain_community.utilities.sql_database import SQLDatabase
 from typing_extensions import TypedDict
 from typing import Annotated, NotRequired
@@ -97,7 +98,7 @@ def check_for_songs(song_title):
     )
 
 music_tools = [get_albums_by_artist, get_tracks_by_artist, get_songs_by_genre, check_for_songs]
-llm_with_music_tools = llm.bind_tools(music_tools)
+llm_with_music_tools = model.bind_tools(music_tools)
 
 
 # Node

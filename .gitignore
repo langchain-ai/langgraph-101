@@ -170,3 +170,5 @@ cython_debug/
 
 # config
 /resources_to_reference
+
+vertexCred.json

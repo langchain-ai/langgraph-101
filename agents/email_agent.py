@@ -2,21 +2,14 @@ from typing import Literal, TypedDict
 from pydantic import BaseModel, Field
 from datetime import datetime
 
-from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
 
 from langgraph.graph import StateGraph, START, END, MessagesState
 from langgraph.types import Command
 from dotenv import load_dotenv
+from utils.models import model
 
 load_dotenv("../.env")
-
-
-
-
-# LLM
-# Initialize the LLM for use with router / structured output
-llm = ChatOpenAI(model="gpt-4.1", temperature=0.0)
 
 class RouterSchema(BaseModel):
     """Analyze the unread email and route it according to its content."""
@@ -30,10 +23,7 @@ class RouterSchema(BaseModel):
         "'respond' for emails that need a reply",
     )
 
-llm_router = llm.with_structured_output(RouterSchema) 
-
-# Initialize the LLM, enforcing tool use (of any available tools) for agent
-llm = ChatOpenAI(model="gpt-4.1", temperature=0.0)
+llm_router = model.with_structured_output(RouterSchema) 
 
 # Tools
 @tool
@@ -66,7 +56,7 @@ class Done(BaseModel):
 tools = [schedule_meeting, check_calendar_availability, write_email, Done]
 tools_by_name = {tool.name: tool for tool in tools}
 
-llm_with_tools = llm.bind_tools(tools, tool_choice="any", parallel_tool_calls=False)
+llm_with_tools = model.bind_tools(tools, tool_choice="any", parallel_tool_calls=False)
 
 
 # State definitions
@@ -318,7 +308,7 @@ Subject: {subject}
     email_markdown = format_email_markdown(subject, author, to, email_thread)
 
     # Run the router LLM
-    result = llm_router.invoke(
+    result = model.invoke(
         [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
