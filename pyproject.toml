@@ -10,6 +10,7 @@ dependencies = [
     "ipython>=9.6.0",
     "langchain>=1.0.1",
     "langchain-anthropic>=1.0.0",
+    "langchain-aws>=1.1.0",
     "langchain-community>=0.4",
     "langchain-google-vertexai>=3.0.3",
     "langchain-openai>=1.0.1",
