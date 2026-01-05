@@ -3,20 +3,22 @@ name = "langgraph-101"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 dependencies = [
+    "aipe>=1.2.2",
     "azure-identity>=1.25.1",
     "grandalf>=0.8",
     "ipython>=9.6.0",
-    "langchain>=1.0.1",
+    "langchain-core>=1.2.5",
+    "langchain>=1.2.0",
     "langchain-anthropic>=1.0.0",
     "langchain-aws>=1.1.0",
     "langchain-community>=0.4",
     "langchain-google-vertexai>=3.0.3",
     "langchain-openai>=1.0.1",
-    "langgraph>=1.0.1",
-    "langgraph-cli[inmem]>=0.4.4",
-    "langsmith>=0.4.37",
+    "langgraph>=1.0.5",
+    "langgraph-cli[inmem]>=0.4.11",
+    "langsmith>=0.6.0",
     "notebook>=7.4.7",
     "openai>=2.6.0",
     "openevals>=0.1.0",
@@ -24,6 +26,11 @@ dependencies = [
     "python-dotenv>=1.1.1",
     "requests>=2.32.5",
 ]
+
+[[tool.uv.index]]
+name = "artifactory"
+url = "https://repository.paychex.com/artifactory/api/pypi/pypi/simple"
+default = true
 
 [tool.setuptools]
 packages = ["agents", "utils"]
