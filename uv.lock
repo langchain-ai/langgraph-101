@@ -333,34 +333,6 @@ wheels = [
 ]
 
 [[package]]
-name = "boto3"
-version = "1.42.21"
-source = { registry = "https://repository.paychex.com/artifactory/api/pypi/pypi/simple" }
-dependencies = [
-    { name = "botocore" },
-    { name = "jmespath" },
-    { name = "s3transfer" },
-]
-sdist = { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/packages/packages/27/36/999f23a821567334ecdfaec31fad556f5569383006543be63fdd1e17193f/boto3-1.42.21.tar.gz", hash = "sha256:9b92943d253bc837323079fe88460e741cb2eb80abaebcb558b2446bdb4049d6" }
-wheels = [
-    { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/packages/packages/55/96/5df07f4f63ab9e72db86192590d7cef70cb911c6e725c1639d56d054f5cc/boto3-1.42.21-py3-none-any.whl", hash = "sha256:1885f252d715a5810bb4e0c5bbebfa8e9018b025febf5be3d58540626e7b43d2" },
-]
-
-[[package]]
-name = "botocore"
-version = "1.42.21"
-source = { registry = "https://repository.paychex.com/artifactory/api/pypi/pypi/simple" }
-dependencies = [
-    { name = "jmespath" },
-    { name = "python-dateutil" },
-    { name = "urllib3" },
-]
-sdist = { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/packages/packages/4c/df/dfd07d75fda643ba07af75e33cfd72472a12bb13901812ca34e47f081507/botocore-1.42.21.tar.gz", hash = "sha256:db8f99d186156da42feb4fd2098017383d9b155097290cc53da7258f6e652c39" }
-wheels = [
-    { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/packages/packages/6e/a1/78c50c437fdf17369adeae275445f40f51029888911923ace37523db4c02/botocore-1.42.21-py3-none-any.whl", hash = "sha256:6b59973a3ba8c3cfd5123f2656fef2339beee9f6483b8bc12bb00c5453ea2c6d" },
-]
-
-[[package]]
 name = "bottleneck"
 version = "1.6.0"
 source = { registry = "https://repository.paychex.com/artifactory/api/pypi/pypi/simple" }
@@ -1415,15 +1387,6 @@ wheels = [
 ]
 
 [[package]]
-name = "jmespath"
-version = "1.0.1"
-source = { registry = "https://repository.paychex.com/artifactory/api/pypi/pypi/simple" }
-sdist = { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/packages/packages/00/2a/e867e8531cf3e36b41201936b7fa7ba7b5702dbef42922193f05c8976cd6/jmespath-1.0.1.tar.gz", hash = "sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe" }
-wheels = [
-    { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/packages/packages/31/b4/b9b800c45527aadd64d5b442f9b932b00648617eb5d63d2c7a6587b7cafc/jmespath-1.0.1-py3-none-any.whl", hash = "sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980" },
-]
-
-[[package]]
 name = "json5"
 version = "0.12.1"
 source = { registry = "https://repository.paychex.com/artifactory/api/pypi/pypi/simple" }
@@ -1690,21 +1653,6 @@ wheels = [
 ]
 
 [[package]]
-name = "langchain-aws"
-version = "1.2.0"
-source = { registry = "https://repository.paychex.com/artifactory/api/pypi/pypi/simple" }
-dependencies = [
-    { name = "boto3" },
-    { name = "langchain-core" },
-    { name = "numpy" },
-    { name = "pydantic" },
-]
-sdist = { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/packages/packages/cc/1a/fc980e450ca748fa4ca62b450e636e6d2abd6401b300cd44743edf8e407b/langchain_aws-1.2.0.tar.gz", hash = "sha256:d208c218c930fcd48cab877dc97670a1c938e4fe3a0287ea3e5409f77a8b744a" }
-wheels = [
-    { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/packages/packages/ef/78/8b6b809fef93489e90f80959990b671ba515868abb43dc6411b05f43243b/langchain_aws-1.2.0-py3-none-any.whl", hash = "sha256:4848a7b620a56c7a8febbedf5aee043c62672341e57dccfed680c2fce3ca0cab" },
-]
-
-[[package]]
 name = "langchain-classic"
 version = "1.0.0"
 source = { registry = "https://repository.paychex.com/artifactory/api/pypi/pypi/simple" }
@@ -1854,11 +1802,8 @@ dependencies = [
     { name = "grandalf" },
     { name = "ipython" },
     { name = "langchain" },
-    { name = "langchain-anthropic" },
-    { name = "langchain-aws" },
     { name = "langchain-community" },
     { name = "langchain-core" },
-    { name = "langchain-google-vertexai" },
     { name = "langchain-openai" },
     { name = "langgraph" },
     { name = "langgraph-cli", extra = ["inmem"] },
@@ -1878,11 +1823,8 @@ requires-dist = [
     { name = "grandalf", specifier = ">=0.8" },
     { name = "ipython", specifier = ">=9.6.0" },
     { name = "langchain", specifier = ">=1.2.0" },
-    { name = "langchain-anthropic", specifier = ">=1.0.0" },
-    { name = "langchain-aws", specifier = ">=1.1.0" },
     { name = "langchain-community", specifier = ">=0.4" },
     { name = "langchain-core", specifier = ">=1.2.5" },
-    { name = "langchain-google-vertexai", specifier = ">=3.0.3" },
     { name = "langchain-openai", specifier = ">=1.0.1" },
     { name = "langgraph", specifier = ">=1.0.5" },
     { name = "langgraph-cli", extras = ["inmem"], specifier = ">=0.4.11" },
@@ -3387,18 +3329,6 @@ dependencies = [
 sdist = { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/packages/packages/da/8a/22b7beea3ee0d44b1916c0c1cb0ee3af23b700b6da9f04991899d0c555d4/rsa-4.9.1.tar.gz", hash = "sha256:e7bdbfdb5497da4c07dfd35530e1a902659db6ff241e39d9953cad06ebd0ae75" }
 wheels = [
     { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/packages/packages/64/8d/0133e4eb4beed9e425d9a98ed6e081a55d195481b7632472be1af08d2f6b/rsa-4.9.1-py3-none-any.whl", hash = "sha256:68635866661c6836b8d39430f97a996acbd61bfa49406748ea243539fe239762" },
-]
-
-[[package]]
-name = "s3transfer"
-version = "0.16.0"
-source = { registry = "https://repository.paychex.com/artifactory/api/pypi/pypi/simple" }
-dependencies = [
-    { name = "botocore" },
-]
-sdist = { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/packages/packages/05/04/74127fc843314818edfa81b5540e26dd537353b123a4edc563109d8f17dd/s3transfer-0.16.0.tar.gz", hash = "sha256:8e990f13268025792229cd52fa10cb7163744bf56e719e0b9cb925ab79abf920" }
-wheels = [
-    { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/packages/packages/fc/51/727abb13f44c1fcf6d145979e1535a35794db0f6e450a0cb46aa24732fe2/s3transfer-0.16.0-py3-none-any.whl", hash = "sha256:18e25d66fed509e3868dc1572b3f427ff947dd2c56f844a5bf09481ad3f3b2fe" },
 ]
 
 [[package]]
