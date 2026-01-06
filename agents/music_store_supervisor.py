@@ -1,22 +1,26 @@
+from typing import Annotated
+
+from aipe.llm import init_payx_chat_model
+from langchain.agents import create_agent
+from langchain.messages import HumanMessage
+from langchain.tools import ToolRuntime, tool
+from langgraph.graph.message import AnyMessage, add_messages
+from typing_extensions import TypedDict
+
 from agents.invoice_agent import graph as invoice_agent
 from agents.music_agent import graph as music_agent
-from utils.models import model
 
-from langchain.agents import create_agent
-from langchain.tools import tool, ToolRuntime
-from typing_extensions import TypedDict
-from typing import Annotated
-from langgraph.graph.message import AnyMessage, add_messages
-from langchain.messages import HumanMessage
+model = init_payx_chat_model(model="gpt-41", model_provider="azure_openai")
+
 
 class InputState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
+
 
 class State(InputState):
     customer_id: int
     loaded_memory: str
     remaining_steps: int
-
 
 
 supervisor_prompt = """You are an expert customer support assistant for a digital music store. You can handle music catalog or invoice related question regarding past purchases, song or album availabilities. 
@@ -38,37 +42,43 @@ Based on the existing steps that have been taken in the messages, your role is t
     name_or_callable="invoice_information_subagent",
     description="""
         An agent that can assistant with all invoice-related queries. It can retrieve information about a customers past purchases or invoices.
-        """
+        """,
 )
 def call_invoice_information_subagent(runtime: ToolRuntime, query: str):
-    print('made it here')
+    print("made it here")
     print(f"invoice subagent input: {query}")
-    result = invoice_agent.invoke({
-        "messages": [HumanMessage(content=query)],
-        "customer_id": runtime.state.get("customer_id", {})
-    })
+    result = invoice_agent.invoke(
+        {
+            "messages": [HumanMessage(content=query)],
+            "customer_id": runtime.state.get("customer_id", {}),
+        }
+    )
     subagent_response = result["messages"][-1].content
     return subagent_response
+
 
 @tool(
     name_or_callable="music_catalog_subagent",
     description="""
         An agent that can assistant with all music-related queries. This agent has access to user's saved music preferences. It can also retrieve information about the digital music store's music 
         catalog (albums, tracks, songs, etc.) from the database. 
-        """
+        """,
 )
 def call_music_catalog_subagent(runtime: ToolRuntime, query: str):
-    result = music_agent.invoke({
-        "messages": [HumanMessage(content=query)],
-        "loaded_memory": runtime.state.get("loaded_memory", {})
-    })
+    result = music_agent.invoke(
+        {
+            "messages": [HumanMessage(content=query)],
+            "loaded_memory": runtime.state.get("loaded_memory", {}),
+        }
+    )
     subagent_response = result["messages"][-1].content
     return subagent_response
 
+
 supervisor = create_agent(
     model=model,
-    tools=[call_invoice_information_subagent, call_music_catalog_subagent], 
+    tools=[call_invoice_information_subagent, call_music_catalog_subagent],
     name="supervisor",
-    system_prompt=supervisor_prompt, 
-    state_schema=State, 
+    system_prompt=supervisor_prompt,
+    state_schema=State,
 )
