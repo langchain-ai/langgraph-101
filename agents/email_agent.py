@@ -1,15 +1,15 @@
-from typing import Literal, TypedDict
-from pydantic import BaseModel, Field
 from datetime import datetime
+from typing import Literal, TypedDict
 
-from langchain_core.tools import tool
-
-from langgraph.graph import StateGraph, START, END, MessagesState
-from langgraph.types import Command
+from aipe.llm import init_payx_chat_model
 from dotenv import load_dotenv
-from utils.models import model
+from langchain_core.tools import tool
+from langgraph.graph import END, START, MessagesState, StateGraph
+from langgraph.types import Command
+from pydantic import BaseModel, Field
 
 load_dotenv("../.env")
+
 
 class RouterSchema(BaseModel):
     """Analyze the unread email and route it according to its content."""
@@ -23,17 +23,26 @@ class RouterSchema(BaseModel):
         "'respond' for emails that need a reply",
     )
 
-llm_router = model.with_structured_output(RouterSchema) 
+
+model = init_payx_chat_model(model="gpt-41", model_provider="azure_openai")
+
+llm_router = model.with_structured_output(RouterSchema)
+
 
 # Tools
 @tool
 def schedule_meeting(
-    attendees: list[str], subject: str, duration_minutes: int, preferred_day: datetime, start_time: int
+    attendees: list[str],
+    subject: str,
+    duration_minutes: int,
+    preferred_day: datetime,
+    start_time: int,
 ) -> str:
     """Schedule a calendar meeting."""
     # Placeholder response - in real app would check calendar and schedule
     date_str = preferred_day.strftime("%A, %B %d, %Y")
     return f"Meeting '{subject}' scheduled on {date_str} at {start_time} for {duration_minutes} minutes with {len(attendees)} attendees"
+
 
 @tool
 def check_calendar_availability(day: str) -> str:
@@ -48,10 +57,13 @@ def write_email(to: str, subject: str, content: str) -> str:
     # Placeholder response - in real app would send email
     return f"Email sent to {to} with subject '{subject}' and content: {content}"
 
+
 @tool
 class Done(BaseModel):
     """E-mail has been sent."""
+
     done: bool
+
 
 tools = [schedule_meeting, check_calendar_availability, write_email, Done]
 tools_by_name = {tool.name: tool for tool in tools}
@@ -63,6 +75,7 @@ llm_with_tools = model.bind_tools(tools, tool_choice="any", parallel_tool_calls=
 class StateInput(TypedDict):
     # This is the input to the state
     email_input: dict
+
 
 class State(MessagesState):
     # This state class has the messages key build in
@@ -136,17 +149,27 @@ Times later in the day are preferable.
 </ Calendar Preferences >
 """
 
+
 # Nodes
 def llm_call(state: State):
     """LLM decides whether to call a tool or not"""
     agent_system_prompt = action_instructions
     return {
         "messages": [
-            llm_with_tools.invoke([
-                {"role": "system", "content": agent_system_prompt.format(today=datetime.now().strftime("%Y-%m-%d"))}
-            ] + state["messages"])
+            llm_with_tools.invoke(
+                [
+                    {
+                        "role": "system",
+                        "content": agent_system_prompt.format(
+                            today=datetime.now().strftime("%Y-%m-%d")
+                        ),
+                    }
+                ]
+                + state["messages"]
+            )
         ]
     }
+
 
 def tool_node(state: State):
     """Performs the tool call"""
@@ -155,8 +178,11 @@ def tool_node(state: State):
     for tool_call in state["messages"][-1].tool_calls:
         tool = tools_by_name[tool_call["name"]]
         observation = tool.invoke(tool_call["args"])
-        result.append({"role": "tool", "content" : observation, "tool_call_id": tool_call["id"]})
+        result.append(
+            {"role": "tool", "content": observation, "tool_call_id": tool_call["id"]}
+        )
     return {"messages": result}
+
 
 # Conditional edge function
 def should_continue(state: State) -> Literal["Action", "__end__"]:
@@ -164,11 +190,12 @@ def should_continue(state: State) -> Literal["Action", "__end__"]:
     messages = state["messages"]
     last_message = messages[-1]
     if last_message.tool_calls:
-        for tool_call in last_message.tool_calls: 
+        for tool_call in last_message.tool_calls:
             if tool_call["name"] == "Done":
                 return END
             else:
                 return "Action"
+
 
 # Build workflow
 agent_builder = StateGraph(State)
@@ -192,6 +219,7 @@ agent_builder.add_edge("tools", "agent")
 
 # Compile the agent
 agent = agent_builder.compile()
+
 
 # ------------------------------------------------------------
 # Triage Router
@@ -220,9 +248,10 @@ def parse_email(email_input: dict) -> dict:
         email_input["email_thread"],
     )
 
+
 def format_email_markdown(subject, author, to, email_thread, email_id=None):
     """Format email details into a nicely formatted markdown string for display
-    
+
     Args:
         subject: Email subject
         author: Email sender
@@ -231,7 +260,7 @@ def format_email_markdown(subject, author, to, email_thread, email_id=None):
         email_id: Optional email ID (for Gmail API)
     """
     id_section = f"\n**ID**: {email_id}" if email_id else ""
-    
+
     return f"""
 
 **Subject**: {subject}
@@ -242,6 +271,7 @@ def format_email_markdown(subject, author, to, email_thread, email_id=None):
 
 ---
 """
+
 
 triage_instructions = """
 < Role >
@@ -287,6 +317,7 @@ Emails that are worth responding to:
 </ Rules >
 """
 
+
 def triage_router(state: State) -> Command[Literal["response_agent", "__end__"]]:
     """
     Analyze email content to decide if we should respond, notify, or ignore.
@@ -304,7 +335,7 @@ Subject: {subject}
         author=author, to=to, subject=subject, email_thread=email_thread
     )
 
-    # Create email markdown for Agent Inbox in case of notification  
+    # Create email markdown for Agent Inbox in case of notification
     email_markdown = format_email_markdown(subject, author, to, email_thread)
 
     # Run the router LLM
@@ -323,19 +354,20 @@ Subject: {subject}
         # Add the email to the messages
         update = {
             "classification_decision": result.classification,
-            "messages": [{"role": "user",
-                            "content": f"Respond to the email: {email_markdown}"
-                        }],
+            "messages": [
+                {"role": "user", "content": f"Respond to the email: {email_markdown}"}
+            ],
         }
     elif result.classification == "ignore":
-        update =  { "classification_decision": result.classification}
+        update = {"classification_decision": result.classification}
         goto = END
     elif result.classification == "notify":
-        update = { "classification_decision": result.classification}
+        update = {"classification_decision": result.classification}
         goto = END
     else:
         raise ValueError(f"Invalid classification: {result.classification}")
     return Command(goto=goto, update=update)
+
 
 # Build workflow
 overall_workflow = (

@@ -1,27 +1,32 @@
-from utils.models import model
-from utils.utils import get_engine_for_chinook_db
-from langchain_community.utilities.sql_database import SQLDatabase
-from typing_extensions import TypedDict
+import ast
 from typing import Annotated, NotRequired
+
+from aipe.llm import init_payx_chat_model
+from langchain.messages import SystemMessage
+from langchain.tools import tool
+from langchain_community.utilities.sql_database import SQLDatabase
+from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import AnyMessage, add_messages
 from langgraph.managed.is_last_step import RemainingSteps
 from langgraph.prebuilt import ToolNode
-from langchain.messages import SystemMessage
-from langgraph.graph import StateGraph, START, END
-from langchain.tools import tool
-import ast
+from typing_extensions import TypedDict
+
+from utils.utils import get_engine_for_chinook_db
+
+model = init_payx_chat_model(model="gpt-41", model_provider="azure_openai")
 
 engine = get_engine_for_chinook_db()
 db = SQLDatabase(engine)
+
 
 class InputState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
     loaded_memory: NotRequired[str]
 
+
 class State(InputState):
     customer_id: NotRequired[str]
     remaining_steps: NotRequired[RemainingSteps]
-
 
 
 @tool
@@ -34,8 +39,9 @@ def get_albums_by_artist(artist: str):
         JOIN Artist ON Album.ArtistId = Artist.ArtistId 
         WHERE Artist.Name LIKE '%{artist}%';
         """,
-        include_columns=True
+        include_columns=True,
     )
+
 
 @tool
 def get_tracks_by_artist(artist: str):
@@ -48,17 +54,18 @@ def get_tracks_by_artist(artist: str):
         LEFT JOIN Track ON Track.AlbumId = Album.AlbumId 
         WHERE Artist.Name LIKE '%{artist}%';
         """,
-        include_columns=True
+        include_columns=True,
     )
+
 
 @tool
 def get_songs_by_genre(genre: str):
     """
     Fetch songs from the database that match a specific genre.
-    
+
     Args:
         genre (str): The genre of the songs to fetch.
-    
+
     Returns:
         list[dict]: A list of songs that match the specified genre.
     """
@@ -87,6 +94,7 @@ def get_songs_by_genre(genre: str):
         for song in formatted_songs
     ]
 
+
 @tool
 def check_for_songs(song_title):
     """Check if a song exists by its name."""
@@ -94,25 +102,31 @@ def check_for_songs(song_title):
         f"""
         SELECT * FROM Track WHERE Name LIKE '%{song_title}%';
         """,
-        include_columns=True
+        include_columns=True,
     )
 
-music_tools = [get_albums_by_artist, get_tracks_by_artist, get_songs_by_genre, check_for_songs]
+
+music_tools = [
+    get_albums_by_artist,
+    get_tracks_by_artist,
+    get_songs_by_genre,
+    check_for_songs,
+]
 llm_with_music_tools = model.bind_tools(music_tools)
 
 
 # Node
 music_tool_node = ToolNode(music_tools)
 
-# Node 
-def music_assistant(state: State): 
 
-    # Fetching long term memory. 
-    memory = "None" 
-    if "loaded_memory" in state: 
+# Node
+def music_assistant(state: State):
+    # Fetching long term memory.
+    memory = "None"
+    if "loaded_memory" in state:
         memory = state["loaded_memory"]
 
-    # Intructions for our agent  
+    # Intructions for our agent
     music_assistant_prompt = f"""
     You are a member of the assistant team, your role specifically is to focused on helping customers discover and learn about music in our digital catalog. 
     If you are unable to find playlists, songs, or albums associated with an artist, it is okay. 
@@ -147,16 +161,19 @@ def music_assistant(state: State):
     """
 
     # Invoke the model
-    response = llm_with_music_tools.invoke([SystemMessage(music_assistant_prompt)] + state["messages"])
-    
+    response = llm_with_music_tools.invoke(
+        [SystemMessage(music_assistant_prompt)] + state["messages"]
+    )
+
     # Update the state
     return {"messages": [response]}
+
 
 # Conditional edge that determines whether to continue or not
 def should_continue(state: State):
     messages = state["messages"]
     last_message = messages[-1]
-    
+
     # If there is no function call, then we finish
     if not last_message.tool_calls:
         return "end"
@@ -164,15 +181,16 @@ def should_continue(state: State):
     else:
         return "continue"
 
-music_workflow = StateGraph(State, input_schema = InputState)
 
-# Add nodes 
+music_workflow = StateGraph(State, input_schema=InputState)
+
+# Add nodes
 music_workflow.add_node("music_assistant", music_assistant)
 music_workflow.add_node("music_tool_node", music_tool_node)
 
 
-# Add edges 
-# First, we define the start node. The query will always route to the subagent node first. 
+# Add edges
+# First, we define the start node. The query will always route to the subagent node first.
 music_workflow.add_edge(START, "music_assistant")
 
 # We now add a conditional edge
@@ -187,7 +205,6 @@ music_workflow.add_conditional_edges(
         "end": END,
     },
 )
-
 
 
 music_workflow.add_edge("music_tool_node", "music_assistant")
