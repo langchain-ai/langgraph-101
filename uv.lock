@@ -97,7 +97,7 @@ wheels = [
 
 [[package]]
 name = "aipe"
-version = "1.2.2"
+version = "1.2.3"
 source = { registry = "https://repository.paychex.com/artifactory/api/pypi/pypi/simple" }
 dependencies = [
     { name = "httpx" },
@@ -114,9 +114,9 @@ dependencies = [
     { name = "truststore" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/aipe/1.2.2/aipe-1.2.2.tar.gz", hash = "sha256:9578e4389e01babb99c7fe38d0a5ac5f28c47f2445df53de9480b0e10f0d2471" }
+sdist = { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/aipe/1.2.3/aipe-1.2.3.tar.gz", hash = "sha256:309ea0ad090244cdbe4a64b4bdd9da3dff148ea21a3801bf461ea799f9a0347d" }
 wheels = [
-    { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/aipe/1.2.2/aipe-1.2.2-py3-none-any.whl", hash = "sha256:4fe91dbb5050350fece0850f4d98da3d7e741a28b5dda8027eb9cf3ac082356c" },
+    { url = "https://repository.paychex.com/artifactory/api/pypi/pypi/aipe/1.2.3/aipe-1.2.3-py3-none-any.whl", hash = "sha256:7699c9ed22d3e9e995183eadd3c78bc52a3b8ddf1bba877cfd527489ea2eb1e1" },
 ]
 
 [[package]]
@@ -1818,7 +1818,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "aipe", specifier = ">=1.2.2" },
+    { name = "aipe", specifier = ">=1.2.3" },
     { name = "azure-identity", specifier = ">=1.25.1" },
     { name = "grandalf", specifier = ">=0.8" },
     { name = "ipython", specifier = ">=9.6.0" },

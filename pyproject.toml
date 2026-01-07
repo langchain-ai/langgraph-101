@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "aipe>=1.2.2",
+    "aipe>=1.2.3",
     "azure-identity>=1.25.1",
     "grandalf>=0.8",
     "ipython>=9.6.0",
