@@ -9,7 +9,7 @@ from langchain_core.messages import (
 )
 from langchain_core.tools import tool
 
-from researcher.state import ResearchComplete
+from agents.researcher.models import ResearchComplete
 
 ##########################
 # Reflection Tool Utils

@@ -21,7 +21,7 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command, interrupt
 
-from researcher.prompts import (
+from agents.researcher.prompts import (
     clarify_with_user_instructions,
     compress_research_simple_human_message,
     compress_research_system_prompt,
@@ -30,7 +30,7 @@ from researcher.prompts import (
     research_system_prompt,
     transform_messages_into_research_topic_prompt,
 )
-from researcher.state import (
+from agents.researcher.models import (
     AgentInputState,
     AgentState,
     ClarifyWithUser,
@@ -41,7 +41,7 @@ from researcher.state import (
     ResearchQuestion,
     SupervisorState,
 )
-from researcher.utils import (
+from agents.researcher.utils import (
     get_all_tools,
     get_notes_from_tool_calls,
     get_today_str,
