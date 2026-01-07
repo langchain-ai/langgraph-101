@@ -1,6 +1,4 @@
-from agents.invoice_agent import graph as invoice_agent
-from agents.music_agent import graph as music_agent
-from agents.music_store_supervisor import supervisor
+from agents.music_store.music_store_supervisor import supervisor
 from utils.models import model
 from utils.utils import get_engine_for_chinook_db
 

@@ -55,7 +55,7 @@ load_dotenv("../../.env")
 
 # ===== HARDCODED CONFIGURATION =====
 # These values are hardcoded for simplicity in this educational example
-RESEARCH_MODEL = "openai:gpt-4.1"
+RESEARCH_MODEL = "openai:gpt-4.1-mini"
 MAX_RESEARCHER_ITERATIONS = 3  # Number of research supervisor iterations
 MAX_REACT_TOOL_CALLS = 10  # Max tool calls per researcher
 MAX_CONCURRENT_RESEARCH_UNITS = 5  # Max parallel research units
@@ -69,6 +69,7 @@ def get_model():
         model=RESEARCH_MODEL,
         max_tokens=MAX_OUTPUT_TOKENS,
         api_key=os.getenv("OPENAI_API_KEY"),
+        use_responses_api=True
     )
 
 
@@ -90,14 +91,27 @@ async def clarify_with_user(state: AgentState, config: RunnableConfig):
         date=get_today_str()
     )
     response = await clarification_model.ainvoke([HumanMessage(content=prompt_content)])
-
-    # If clarification is needed, use interrupt to get user input
+    # If clarification needed, use interrupt to pause for user input
     if response.need_clarification:
-        user_response = interrupt(response.question)
-        return {"messages": [AIMessage(content=response.question), HumanMessage(content=user_response)]}
+        return {"messages": [AIMessage(content=response.question)], "need_elaboration": True}
     else:
-        # No clarification needed, add verification and continue
-        return {"messages": [AIMessage(content=response.verification)]}
+        # No clarification needed
+        return {"messages": [AIMessage(content=response.verification)], "need_elaboration": False}
+
+
+async def human_input(state: AgentState, config):
+    ai_question = state["messages"][-1].content
+    user_response = interrupt(ai_question)
+    return {"messages": [HumanMessage(content=user_response)], "need_elaboration": False}
+
+
+def human_feedback_needed(state: AgentState):
+    need_elaboration = state.get("need_elaboration", False)
+    if need_elaboration:
+        return "human_input"
+    else:
+        return "write_research_brief"
+
 
 
 async def write_research_brief(state: AgentState, config: RunnableConfig) -> Command[Literal["research_supervisor"]]:
@@ -473,24 +487,32 @@ async def final_report_generation(state: AgentState, config: RunnableConfig):
     }
 
 
-# Main Deep Researcher Graph Construction
+# Build complete research workflow
 deep_researcher_builder = StateGraph(
     AgentState,
-    input=AgentInputState
+    input_schema=AgentInputState
 )
 
-# Add main workflow nodes
+# Add nodes
 deep_researcher_builder.add_node("clarify_with_user", clarify_with_user)
+deep_researcher_builder.add_node("human_input", human_input)
 deep_researcher_builder.add_node("write_research_brief", write_research_brief)
 deep_researcher_builder.add_node("research_supervisor", supervisor_subgraph)
 deep_researcher_builder.add_node("final_report_generation", final_report_generation)
 
-# Define main workflow edges
+# Add edges
 deep_researcher_builder.add_edge(START, "clarify_with_user")
-deep_researcher_builder.add_edge("clarify_with_user", "write_research_brief")
+deep_researcher_builder.add_conditional_edges(
+    "clarify_with_user",
+    human_feedback_needed,
+    {
+        "human_input": "human_input",
+        "write_research_brief": "write_research_brief",
+    },
+)
+deep_researcher_builder.add_edge("human_input", "clarify_with_user")
 deep_researcher_builder.add_edge("write_research_brief", "research_supervisor")
 deep_researcher_builder.add_edge("research_supervisor", "final_report_generation")
 deep_researcher_builder.add_edge("final_report_generation", END)
 
-# Compile the complete deep researcher workflow
 graph = deep_researcher_builder.compile()
