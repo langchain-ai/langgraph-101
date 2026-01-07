@@ -19,7 +19,7 @@ To use a different LLM provider, follow these steps:
 
 """Default Models"""
 from dotenv import load_dotenv
-load_dotenv(dotenv_path="../.env", override=True)
+load_dotenv(dotenv_path="../../.env", override=True)
 from langchain.chat_models import init_chat_model
 
 model = init_chat_model("openai:o3-mini")
