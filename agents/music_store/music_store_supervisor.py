@@ -62,7 +62,7 @@ def call_music_catalog_subagent(runtime: ToolRuntime, query: str):
     return subagent_response
 
 supervisor = create_agent(
-    model="anthropic:claude-3-7-sonnet-latest", 
+    model="openai:gpt-4.1", 
     tools=[call_invoice_information_subagent, call_music_catalog_subagent], 
     name="supervisor",
     system_prompt=supervisor_prompt, 
