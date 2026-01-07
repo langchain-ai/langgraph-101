@@ -1,12 +1,12 @@
 {
     "dockerfile_lines": [],
     "graphs": {
-      "Email Agent": "./agents/email_agent.py:graph",
+      "Email Agent": "./agents/email/email_agent.py:graph",
       "LG101 Weather Agent": "./agents/lg101-weather-agent.py:agent",
-      "Music Catalog Subagent": "./agents/music_agent.py:graph",
-      "Invoice Subagent": "./agents/invoice_agent.py:graph",
-      "Store Supervisor": "./agents/music_store_supervisor.py:supervisor",
-      "Store Supervisor with Verification": "./agents/music_store_supervisor_with_interrupt.py:graph"
+      "Music Subagent": "./agents/music_store/music_agent.py:graph",
+      "Invoice Subagent": "./agents/music_store/invoice_agent.py:graph",
+      "Store Supervisor": "./agents/music_store/music_store_supervisor.py:supervisor",
+      "Store Supervisor with Verification": "./agents/music_store/music_store_supervisor_with_interrupt.py:graph"
     },
     "env": ".env",
     "python_version": "3.11",
