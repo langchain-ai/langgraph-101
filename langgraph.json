@@ -1,7 +1,7 @@
 {
     "dockerfile_lines": [],
     "graphs": {
-      "Email Agent": "./agents/email/email_agent.py:graph",
+      "Email Agent": "./agents/email_assistant/email_agent.py:graph",
       "LG101 Weather Agent": "./agents/lg101-weather-agent.py:agent",
       "Music Subagent": "./agents/music_store/music_agent.py:graph",
       "Invoice Subagent": "./agents/music_store/invoice_agent.py:graph",
