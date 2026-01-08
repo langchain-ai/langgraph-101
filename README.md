@@ -1,6 +1,9 @@
 # LangGraph 101
 
-Welcome to LangGraph 101! 
+Welcome to LangGraph 101! This is a modified version of the Langchain 101 and 201 courses for Paychex. The main changes are how Model classes are instantiated. The AI PLatform Engineering Team has a package called the AIPE SDK which provides useful, Paychex-specific Abstractions for building AI applications
+
+[AIPE SDK Docs](https://super-adventure-5lwo1p6.pages.github.io/)
+
 
 ## Introduction
 This repository contains hands-on tutorials for learning LangChain and LangGraph, organized into two learning tracks:
@@ -32,9 +35,14 @@ To tackle this problem, we've built [LangGraph](https://docs.langchain.com/oss/p
 
 ## Pre-work
 
-### Clone the LangGraph 101 repo
+### Clone the LangGraph 101 repo from either Github or Bitbucket
 ```
 git clone https://github.com/paychex/payx-langgraph-101.git
+```
+
+
+```
+git clone ssh://git@code.paychex.com/aipe/payx-langgraph-101.git
 ```
 
 
@@ -44,23 +52,28 @@ Ensure you have a recent version of `uv` Package manager installed:
 ```
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
-
+cd into your cloned repository and copy the example environment file:
 
 ```
 cd payx-langgraph-101
-# Copy the .env.example file to .env
+
 cp .env.example .env
 ```
 
+You will be supplied with necessary API keys during the session to populate the `.env` file.
+
 
 ### Package Installation
+The Package Index is pointed to Paychex Artifactory (set in pyproject.toml)
+
 ```
-# Install the package, allowing for pre-release 
+# Install the packages into a virtual environment
 uv sync --native-tls
 
 # Activate the virtual environment
 source .venv/bin/activate
 ```
+------------------------------------
 
 ### Running Agents Locally
 
