@@ -337,9 +337,8 @@ Subject: {subject}
 
     # Create email markdown for Agent Inbox in case of notification
     email_markdown = format_email_markdown(subject, author, to, email_thread)
-
     # Run the router LLM
-    result = model.invoke(
+    result = llm_router.invoke(
         [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},

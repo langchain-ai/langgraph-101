@@ -7,8 +7,8 @@ from langchain.tools import ToolRuntime, tool
 from langgraph.graph.message import AnyMessage, add_messages
 from typing_extensions import TypedDict
 
-from agents.invoice_agent import graph as invoice_agent
-from agents.music_agent import graph as music_agent
+from agents.music_store.invoice_agent import graph as invoice_agent
+from agents.music_store.music_agent import graph as music_agent
 
 model = init_payx_chat_model(model="gpt-41", model_provider="azure_openai")
 

@@ -9,7 +9,7 @@ from langgraph.graph.message import AnyMessage, add_messages
 from langgraph.managed.is_last_step import RemainingSteps
 from typing_extensions import TypedDict
 
-from agents.music_store_supervisor import supervisor
+from agents.music_store.music_store_supervisor import supervisor
 from utils.utils import get_engine_for_chinook_db
 
 model = init_payx_chat_model(model="gpt-41", model_provider="azure_openai")
