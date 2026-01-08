@@ -7,6 +7,8 @@ from langchain_community.utilities.sql_database import SQLDatabase
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import AnyMessage, add_messages
 from langgraph.managed.is_last_step import RemainingSteps
+from langgraph.types import interrupt
+from pydantic import BaseModel, Field
 from typing_extensions import TypedDict
 
 from agents.music_store.music_store_supervisor import supervisor
@@ -26,9 +28,6 @@ class State(InputState):
     customer_id: NotRequired[str]
     loaded_memory: NotRequired[str]
     remaining_steps: NotRequired[RemainingSteps]
-
-
-from pydantic import BaseModel, Field
 
 
 class UserInput(BaseModel):
@@ -115,9 +114,6 @@ def verify_info(state: State):
 
     else:
         pass
-
-
-from langgraph.types import interrupt
 
 
 # Node
