@@ -8,7 +8,8 @@
       "Music Store Supervisor with Verification": "./agents/music_store/music_store_supervisor_with_interrupt.py:graph",
       "Music Store Supervisor with Memory and Verification": "./agents/music_store/memory_enabled_music_store_supervisor_with_interrupt.py:agent",
       "Email Agent": "./agents/email_agent/graph.py:graph",
-      "Research Agent": "./agents/researcher/graph.py:graph"
+      "Research Agent": "./agents/researcher/graph.py:graph",
+      "Deep Agent": "./agents/deep_agent/graph.py:agent"
     },
     "env": ".env",
     "dependencies": [
