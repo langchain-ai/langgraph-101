@@ -1,6 +1,8 @@
 """Deep Agent for LangGraph Studio.
 
 A research agent built with DeepAgents that demonstrates:
+- AGENTS.md for agent identity and instructions (replaces hardcoded system_prompt)
+- Skills for on-demand capabilities (LinkedIn post, Twitter/X post)
 - Custom tools (Tavily search + strategic thinking)
 - Research subagent for delegated work
 - Long-term memory via CompositeBackend (/memories/ -> StoreBackend)
@@ -10,14 +12,17 @@ When running via `langgraph dev`, the store and checkpointer are
 automatically provisioned by the platform.
 """
 
+import os
 from datetime import datetime
 
 from deepagents import create_deep_agent
-from deepagents.backends import CompositeBackend, StateBackend, StoreBackend
+from deepagents.backends import CompositeBackend, FilesystemBackend, StoreBackend
 from langchain_core.tools import tool
 from tavily import TavilyClient
 
 from utils.models import model
+
+AGENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # --- Tools ---
 
@@ -78,8 +83,6 @@ Structure your findings with:
 - Inline citations [1], [2], [3]
 - Sources section at the end
 </Output Format>
-
-When referencing file paths, use backtick formatting like `path/file.md` instead of markdown links.
 """
 
 research_subagent = {
@@ -92,11 +95,13 @@ research_subagent = {
 
 # --- Backend ---
 
+
 def backend_factory(rt):
-    """Route /memories/ to persistent StoreBackend, everything else ephemeral."""
+    """FilesystemBackend for disk access (skills, AGENTS.md), /memories/ routed to StoreBackend."""
     return CompositeBackend(
-        default=StateBackend(rt),
+        default=FilesystemBackend(root_dir=AGENT_DIR, virtual_mode=True),
         routes={
+            # Memories will be stored in the langgraph store, which is visible in studio by clicking the "memory" button.
             "/memories/": StoreBackend(rt),
         },
     )
@@ -107,23 +112,9 @@ def backend_factory(rt):
 agent = create_deep_agent(
     model=model,
     tools=[tavily_search, think_tool],
-    system_prompt=f"""You are an expert research assistant. Today's date is {current_date}.
-
-## Workflow
-1. Use write_todos to plan your research
-2. Delegate research to the research-agent using the task() tool
-3. Synthesize findings into a comprehensive report
-4. Write the final report to `/final_report.md`
-5. Save key takeaways to `/memories/research_notes.md` for future reference
-
-## Rules
-- Delegate research to the research-agent rather than searching directly
-- After receiving research results, synthesize and write the report yourself
-- Consolidate citations (each unique URL gets one number)
-- End reports with a Sources section
-
-When referencing file paths, use backtick formatting like `path/file.md` instead of markdown links.
-""",
+    system_prompt="You are an expert research assistant.",
+    memory=["./AGENTS.md"],
+    skills=["./skills/"],
     subagents=[research_subagent],
     backend=backend_factory,
     interrupt_on={
@@ -131,3 +122,5 @@ When referencing file paths, use backtick formatting like `path/file.md` instead
         "edit_file": True,
     },
 )
+
+# approve an action in studio by entering: {"decisions": [{"type": "approve"}]} in the interrupt input.
