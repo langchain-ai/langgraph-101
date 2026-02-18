@@ -26,7 +26,7 @@ This is a condensed version of LangChain Academy, intended to be run in a sessio
 
 ### Agents (`agents/`)
 Standalone agent implementations that run in LangGraph Studio via `langgraph dev`:
-- **`agents/lg101/`** - Simple weather agent from the 101 notebook
+- **`agents/101/`** - Simple weather agent from the 101 notebook
 - **`agents/email_agent/`** - Email triage agent
 - **`agents/music_store/`** - Multi-agent music store (supervisor + subagents)
 - **`agents/researcher/`** - Deep research agent with parallel sub-researchers
@@ -43,12 +43,13 @@ langgraph-101/
 │   │   ├── 101_langchain_langgraph.ipynb
 │   │   └── 102_middleware.ipynb
 │   └── 201/                          # Production Patterns
+│       └── deep_agents.ipynb
 │       ├── email_agent.ipynb
 │       ├── multi_agent.ipynb
 │       ├── research_agent.ipynb
-│       └── deepagents.ipynb
+
 ├── agents/                           # Standalone agents for LangGraph Studio
-│   ├── lg101/agent.py
+│   ├── 101/agent.py
 │   ├── email_agent/graph.py
 │   ├── music_store/                  # Multi-agent supervisor + subagents
 │   ├── researcher/                   # Deep research agent
