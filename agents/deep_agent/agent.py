@@ -48,19 +48,6 @@ def tavily_search(query: str) -> str:
 
     return f"Found {len(result_texts)} result(s) for '{query}':\n\n{''.join(result_texts)}"
 
-
-@tool(parse_docstring=True)
-def think_tool(reflection: str) -> str:
-    """Tool for strategic reflection on research progress.
-
-    Use this after each search to analyze results and plan next steps.
-
-    Args:
-        reflection: Your detailed reflection on research progress
-    """
-    return f"Reflection recorded: {reflection}"
-
-
 # --- Research Subagent ---
 
 current_date = datetime.now().strftime("%Y-%m-%d")
@@ -89,7 +76,7 @@ research_subagent = {
     "name": "research-agent",
     "description": "Delegate research tasks. Give one topic at a time.",
     "system_prompt": RESEARCHER_INSTRUCTIONS,
-    "tools": [tavily_search, think_tool],
+    "tools": [tavily_search],
 }
 
 
@@ -111,7 +98,7 @@ def backend_factory(rt):
 
 agent = create_deep_agent(
     model=model,
-    tools=[tavily_search, think_tool],
+    tools=[tavily_search],
     system_prompt="You are an expert research assistant.",
     memory=["./AGENTS.md"],
     skills=["./skills/"],
