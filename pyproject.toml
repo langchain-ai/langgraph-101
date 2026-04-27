@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "azure-identity>=1.25.1",
-    "deepagents>=0.4.12",
+    "deepagents>=0.5.3",
     "grandalf>=0.8",
     "ipython>=9.6.0",
     "langchain>=1.0.1",
