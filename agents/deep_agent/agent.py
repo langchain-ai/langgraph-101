@@ -82,16 +82,14 @@ research_subagent = {
 
 # --- Backend ---
 
-
-def backend_factory(rt):
-    """FilesystemBackend for disk access (skills, AGENTS.md), /memories/ routed to StoreBackend."""
-    return CompositeBackend(
-        default=FilesystemBackend(root_dir=AGENT_DIR, virtual_mode=True),
-        routes={
-            # Memories will be stored in the langgraph store, which is visible in studio by clicking the "memory" button.
-            "/memories/": StoreBackend(rt),
-        },
-    )
+# FilesystemBackend for disk access (skills, AGENTS.md), /memories/ routed to StoreBackend.
+composite_backend = CompositeBackend(
+    default=FilesystemBackend(root_dir=AGENT_DIR, virtual_mode=True),
+    routes={
+        # Memories will be stored in the langgraph store, which is visible in studio by clicking the "memory" button.
+        "/memories/": StoreBackend(),
+    },
+)
 
 
 # --- Agent ---
@@ -103,7 +101,7 @@ agent = create_deep_agent(
     memory=["./AGENTS.md"],
     skills=["./skills/"],
     subagents=[research_subagent],
-    backend=backend_factory,
+    backend=composite_backend,
     interrupt_on={
         "write_file": True,
         "edit_file": True,
