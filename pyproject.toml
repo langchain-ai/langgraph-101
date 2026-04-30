@@ -19,11 +19,11 @@ dependencies = [
     "langgraph>=1.0.1",
     "langgraph-cli[inmem]>=0.4.4",
     "langsmith>=0.7.31",
-    "notebook>=7.4.7",
+    "notebook>=7.5.6",
     "openai>=2.6.0",
     "openevals>=0.1.0",
     "protobuf>=6.33.0",
-    "python-dotenv>=1.1.1",
+    "python-dotenv>=1.2.2",
     "requests>=2.32.5",
     "tavily-python>=0.7.21",
 ]
