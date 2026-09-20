@@ -22,7 +22,8 @@ This is a condensed version of LangChain Academy, intended to be run in a sessio
 - **email_agent.ipynb**: Build a stateful email triage and response agent
 - **multi_agent.ipynb**: Multi-agent systems with supervisors and specialized sub-agents
 - **research_agent.ipynb**: Deep research agent with parallel sub-researchers
-- **deepagents.ipynb**: Build a research agent from scratch with DeepAgents -- covers AGENTS.md, skills, backends, long-term memory, HITL, and more
+- **deep_agents.ipynb**: Build a research agent from scratch with DeepAgents -- covers AGENTS.md, skills, backends, long-term memory, HITL, and more
+- **deep_agents_extra.ipynb**: Explore Deep Agents internals, customization, middleware, MCP adapters, and sandboxed code execution
 
 ### Agents (`agents/`)
 Standalone agent implementations that run in LangGraph Studio via `langgraph dev`:
@@ -43,10 +44,11 @@ langgraph-101/
 │   │   ├── 101_langchain_langgraph.ipynb
 │   │   └── 102_middleware.ipynb
 │   └── 201/                          # Production Patterns
-│       └── deep_agents.ipynb
+│       ├── deep_agents.ipynb
+│       ├── deep_agents_extra.ipynb
 │       ├── email_agent.ipynb
 │       ├── multi_agent.ipynb
-│       ├── research_agent.ipynb
+│       └── research_agent.ipynb
 
 ├── agents/                           # Standalone agents for LangGraph Studio
 │   ├── 101/agent.py
@@ -132,7 +134,7 @@ This repository uses a **centralized utils module** (`utils/`) to avoid code dup
 - **`utils/models.py`** - LLM model initialization (OpenAI, Anthropic, Azure, Bedrock, Vertex AI)
 - **`utils/utils.py`** - Shared utility functions (`show_graph`, `get_engine_for_chinook_db`)
 
-**Default**: OpenAI with `o3-mini` model. To switch providers, edit `utils/models.py` following the instructions below.
+**Default**: Anthropic with the `claude-haiku-4-5` model. To switch providers, edit `utils/models.py` following the instructions below.
 
 **Note**: Notebooks automatically add the project root to Python's path, so they can import from `utils` regardless of which subdirectory they're in.
 
@@ -207,7 +209,8 @@ If you are using Google Vertex AI instead of OpenAI, follow these steps:
 2. **Progress to 201** - `notebooks/201/`
    - Explore `email_agent.ipynb` for a complete stateful agent example
    - Build multi-agent systems with `multi_agent.ipynb`
-   - Learn Deep Agents with `deepagents.ipynb` -- progressively build a research agent with AGENTS.md, skills, backends, memory, and HITL
+   - Learn Deep Agents with `deep_agents.ipynb` -- progressively build a research agent with AGENTS.md, skills, backends, memory, and HITL
+   - Go under the hood with `deep_agents_extra.ipynb` to customize middleware, tools, subagents, and execution backends
 
 3. **Run Agents in Studio**
    - Use `langgraph dev` to launch all agents in LangGraph Studio
