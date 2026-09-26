@@ -3,7 +3,7 @@
 Welcome to LangGraph 101! 
 
 ## Introduction
-This repository contains hands-on tutorials for learning LangChain, LangGraph, and Deep Agents, organized into two learning tracks:
+This Repository Contains hands-on tutorials for learning LangChain, LangGraph, and Deep Agents, organized into two learning tracks:
 
 - **101**: Fundamentals of building agents with LangChain and LangGraph
 - **201**: Advanced patterns including multi-agent systems, deep agents, and production workflows
@@ -105,14 +105,11 @@ uv sync
 # Activate the virtual environment
 source .venv/bin/activate
 ```
-
 ### Running Agents Locally
-
 You can run the agents in this repository locally using `langgraph dev`. This gives you:
 - A local API server for your agents
 - LangGraph Studio UI for testing and debugging
 - Hot-reloading during development
-
 ```bash
 # From the root directory, start the LangGraph development server
 langgraph dev
@@ -146,7 +143,6 @@ If you are using Azure OpenAI instead of OpenAI, follow these steps:
    AZURE_OPENAI_ENDPOINT=your_endpoint
    AZURE_OPENAI_API_VERSION=2024-03-01-preview
    ```
-
 2. **Update `utils/models.py`**:
    - Comment out the "Default Models" section (lines 20-28)
    - Uncomment the "AZURE OpenAI Version" section (lines 31-57)
