@@ -14,6 +14,7 @@ automatically provisioned by the platform.
 
 import os
 from datetime import datetime
+from functools import cache
 
 from deepagents import create_deep_agent
 from deepagents.backends import CompositeBackend, FilesystemBackend, StoreBackend
@@ -26,7 +27,11 @@ AGENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # --- Tools ---
 
-tavily_client = TavilyClient()
+
+@cache
+def get_tavily_client() -> TavilyClient:
+    # Created on first use so a missing TAVILY_API_KEY doesn't break graph loading
+    return TavilyClient()
 
 
 @tool(parse_docstring=True)
@@ -36,7 +41,7 @@ def tavily_search(query: str) -> str:
     Args:
         query: Search query to execute
     """
-    search_results = tavily_client.search(query, max_results=3, topic="general")
+    search_results = get_tavily_client().search(query, max_results=3, topic="general")
 
     result_texts = []
     for result in search_results.get("results", []):
